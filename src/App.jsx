@@ -547,6 +547,7 @@ export default function App() {
             </div>
 
             {/* Navigation Header */}
+            {!['portal-teen', 'portal-parent', 'portal-therapist'].includes(currentView) && (
             <header className="navbar">
                 <div className="navbar-container">
                     {/* Logo & Brand */}
@@ -667,6 +668,8 @@ export default function App() {
                     </div>
                 </div>
             </header>
+            )}
+
 
             {/* Main Content Area */}
             <main id="app-content" style={{ minHeight: '70vh' }}>
@@ -1678,7 +1681,7 @@ export default function App() {
 
                 {/* ================= PORTAL: THERAPIST ================= */}
                 {currentView === 'portal-therapist' && (
-                    <section className="app-view dashboard-container">
+                    <section className="app-view dashboard-container" style={{ paddingTop: '24px' }}>
                         <div className="dashboard-header">
                             <div>
                                 <span className="dashboard-tag text-green">Clinical Workspace</span>
