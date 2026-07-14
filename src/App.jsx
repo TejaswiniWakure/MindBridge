@@ -582,21 +582,29 @@ export default function App() {
                             </li>
                             <li>
                                 <button 
+                                    className={`nav-link ${currentView === 'how-it-works' ? 'active-nav' : ''}`}
+                                    onClick={() => navigateTo('how-it-works')}
+                                >
+                                    How It Works
+                                </button>
+                            </li>
+                            <li>
+                                <button 
                                     className={`nav-link ${currentView === 'about' ? 'active-nav' : ''}`}
                                     onClick={() => navigateTo('about')}
                                 >
                                     About
                                 </button>
                             </li>
-
                             <li>
                                 <button 
-                                    className={`nav-link ${currentView === 'faqs' ? 'active-nav' : ''}`}
-                                    onClick={() => navigateTo('faqs')}
+                                    className={`nav-link ${currentView === 'therapist' ? 'active-nav' : ''}`}
+                                    onClick={() => navigateTo('therapist')}
                                 >
-                                    FAQs
+                                    Therapist
                                 </button>
                             </li>
+
                             <li>
                                 <button 
                                     className={`nav-link ${currentView === 'contact' ? 'active-nav' : ''}`}
@@ -677,14 +685,41 @@ export default function App() {
                 {/* ================= VIEW: HOME ================= */}
                 {currentView === 'home' && (
                     <section className="app-view">
-                        <div className="hero-container">
-                            <span className="hero-tagline">Parent–Teen Care Platform</span>
-                            <h1 className="hero-title">
-                                Supporting Every Family's <span className="text-gradient">Mental Wellness</span>
+                        <div className="hero-container" style={{ textAlign: 'center', padding: '60px 24px', position: 'relative' }}>
+                            {/* Top Badge */}
+                            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#EFF6FF', color: '#1D4ED8', padding: '6px 18px', borderRadius: '50px', fontSize: '0.8rem', fontWeight: '700', marginBottom: '24px' }}>
+                                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#2563EB' }}></span>
+                                A Safe Space for Young Minds
+                            </div>
+
+                            {/* Main Title */}
+                            <h1 className="hero-title" style={{ fontSize: '3rem', fontWeight: '800', color: '#0F172A', lineHeight: '1.25', margin: '0 auto 16px auto', maxWidth: '840px', letterSpacing: '-0.02em' }}>
+                                Helping Children Feel Heard, <br />
+                                <span style={{ background: 'linear-gradient(135deg, #3B82F6 0%, #10B981 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Understood & Supported</span>
                             </h1>
-                            <p className="hero-subtitle">
-                                MindBridge is an AI-powered platform that helps parents understand, teens express themselves, and families grow stronger through compassionate, personalized support.
+
+                            {/* Subtitle */}
+                            <p className="hero-subtitle" style={{ fontSize: '1rem', color: '#64748B', maxWidth: '640px', margin: '0 auto 32px auto', lineHeight: '1.6' }}>
+                                Personalized conversations, wellness assessments, and daily activities designed to build healthy emotional habits for every child.
                             </p>
+
+                            {/* Hero Action Buttons */}
+                            <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', marginBottom: '40px' }}>
+                                <button className="btn" style={{ padding: '12px 32px', borderRadius: '12px', background: '#1D8EEB', border: 'none', color: '#FFFFFF', fontWeight: '700', fontSize: '0.92rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }} onClick={() => navigateTo('auth')}>
+                                    Get Started Free <span>→</span>
+                                </button>
+                                <button className="btn" style={{ padding: '12px 32px', borderRadius: '12px', background: '#FFFFFF', border: '1px solid #E2E8F0', color: '#334155', fontWeight: '700', fontSize: '0.92rem', cursor: 'pointer' }} onClick={() => navigateTo('features')}>
+                                    Explore Features
+                                </button>
+                            </div>
+
+                            {/* Bottom Feature Chips */}
+                            <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', flexWrap: 'wrap', maxWidth: '780px', margin: '0 auto' }}>
+                                <span style={{ background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: '50px', padding: '8px 18px', fontSize: '0.8rem', color: '#475569', fontWeight: '600' }}>Personalized Wellness</span>
+                                <span style={{ background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: '50px', padding: '8px 18px', fontSize: '0.8rem', color: '#475569', fontWeight: '600' }}>Secure & Confidential</span>
+                                <span style={{ background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: '50px', padding: '8px 18px', fontSize: '0.8rem', color: '#475569', fontWeight: '600' }}>Evidence-Based</span>
+                                <span style={{ background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: '50px', padding: '8px 18px', fontSize: '0.8rem', color: '#475569', fontWeight: '600' }}>Daily Support</span>
+                            </div>
                         </div>
 
                         {/* Interactive How it Works section to push footer below the fold */}
@@ -912,6 +947,39 @@ export default function App() {
                                 <h3>🚨 Emergency Support</h3>
                                 <p>Access instant help and emergency resources when needed.</p>
                             </div>
+                        </div>
+                    </section>
+                )}
+
+                {/* ================= VIEW: HOW IT WORKS ================= */}
+                {currentView === 'how-it-works' && (
+                    <section className="app-view section-container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '40px 24px' }}>
+                        <div className="section-header text-center" style={{ marginBottom: '40px' }}>
+                            <span className="section-tag" style={{ background: '#F0FDF4', color: '#16A34A', padding: '4px 14px', borderRadius: '50px', fontSize: '0.7rem', fontWeight: '800', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '8px', display: 'inline-block' }}>⚡ PERSONALIZED WELLNESS JOURNEY</span>
+                            <h2 className="section-title" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '2rem', fontWeight: '800', color: '#0F172A', margin: '0 0 6px' }}>How MindCare Works</h2>
+                            <p className="section-subtitle" style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.85rem', color: '#64748B', maxWidth: '520px', margin: '0 auto', lineHeight: '1.4' }}>Follow a simple, guided wellness journey—from creating your profile and sharing your thoughts to receiving personalized insights and accessing tools that support your emotional well-being every day.</p>
+                        </div>
+
+                        {/* Interactive Timeline Row */}
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '20px', width: '100%', maxWidth: '820px', margin: '0 auto 40px auto', position: 'relative' }}>
+                            {/* Connector line behind steps */}
+                            <div style={{ position: 'absolute', top: '16px', left: '10%', right: '10%', height: '2px', background: '#E2E8F0', zIndex: 0 }}></div>
+
+                            {[
+                                { step: '1', title: 'Create Account', desc: 'Register securely in seconds.' },
+                                { step: '2', title: 'Choose Portal', desc: 'Tailored interface for you.' },
+                                { step: '3', title: 'Wellness Session', desc: 'Guided interactive onboarding.' },
+                                { step: '4', title: 'Wellness Profile', desc: 'Your comprehensive health index.' },
+                                { step: '5', title: 'Access Dashboard', desc: 'Emotional support and tracking.' }
+                            ].map((item, index) => (
+                                <div key={index} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', zIndex: 1 }}>
+                                    <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#EFF6FF', color: '#2563EB', display: 'flex', alignItems: 'center', justifycontent: 'center', fontWeight: '700', fontSize: '0.85rem', border: '2px solid #3B82F6', marginBottom: '12px', justifyContent: 'center' }}>
+                                        {item.step}
+                                    </div>
+                                    <h4 style={{ fontSize: '0.85rem', fontWeight: '800', color: '#0F172A', marginBottom: '4px' }}>{item.title}</h4>
+                                    <p style={{ fontSize: '0.72rem', color: '#64748B', lineHeight: '1.4' }}>{item.desc}</p>
+                                </div>
+                            ))}
                         </div>
                     </section>
                 )}
