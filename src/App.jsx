@@ -716,6 +716,14 @@ export default function App() {
                 {currentView === 'home' && (
                     <section className="app-view">
                         <div className="hero-container" style={{ textAlign: 'center', padding: '60px 24px', position: 'relative' }}>
+                            {/* Top Badge (Moved Up) */}
+                            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '24px' }}>
+                                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#EFF6FF', color: '#1D4ED8', padding: '6px 18px', borderRadius: '50px', fontSize: '0.8rem', fontWeight: '700', boxShadow: '0 4px 12px rgba(29, 78, 216, 0.1)' }}>
+                                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#2563EB', animation: 'pulse 2s infinite' }}></span>
+                                    A Safe Space for Young Minds
+                                </div>
+                            </div>
+
                             {/* Main Title */}
                             <h1 className="hero-title" style={{ fontSize: '3rem', fontWeight: '800', color: '#0F172A', lineHeight: '1.25', margin: '0 auto 16px auto', maxWidth: '840px', letterSpacing: '-0.02em' }}>
                                 Helping Children Feel Heard, <br />
@@ -723,15 +731,9 @@ export default function App() {
                             </h1>
 
                             {/* Subtitle */}
-                            <p className="hero-subtitle" style={{ fontSize: '1rem', color: '#64748B', maxWidth: '640px', margin: '0 auto 24px auto', lineHeight: '1.6' }}>
+                            <p className="hero-subtitle" style={{ fontSize: '1rem', color: '#64748B', maxWidth: '640px', margin: '0 auto 32px auto', lineHeight: '1.6' }}>
                                 Personalized conversations, wellness assessments, and daily activities designed to build healthy emotional habits for every child.
                             </p>
-
-                            {/* Top Badge (Moved Down) */}
-                            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#EFF6FF', color: '#1D4ED8', padding: '6px 18px', borderRadius: '50px', fontSize: '0.8rem', fontWeight: '700', marginBottom: '40px', boxShadow: '0 4px 12px rgba(29, 78, 216, 0.1)' }}>
-                                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#2563EB', animation: 'pulse 2s infinite' }}></span>
-                                A Safe Space for Young Minds
-                            </div>
 
                             {/* Bottom Feature Chips */}
                             <div className="feature-chips-container" style={{ display: 'flex', justifyContent: 'center', gap: '12px', flexWrap: 'wrap', maxWidth: '780px', margin: '0 auto' }}>
@@ -783,28 +785,29 @@ export default function App() {
                             </div>
                         </div>
 
-                        {/* ===== HOW MINDCARE WORKS — 5-step flow ===== */}
+                        {/* ===== HOW MINDCARE WORKS — 6-step flow ===== */}
                         <div id="section-how-it-works" className="section-container" style={{ paddingTop: '60px', marginTop: '0', scrollMarginTop: '80px' }}>
                             <div className="section-header text-center" style={{ marginBottom: '40px' }}>
-                                <span className="section-tag" style={{ background: '#F0FDF4', color: '#16A34A', padding: '4px 14px', borderRadius: '50px', fontSize: '0.7rem', fontWeight: '800', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '8px', display: 'inline-block' }}>⚡ PERSONALIZED WELLNESS JOURNEY</span>
+                                <span className="section-tag" style={{ background: '#F0FDF4', color: '#16A34A', padding: '4px 14px', borderRadius: '50px', fontSize: '0.7rem', fontWeight: '800', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '8px', display: 'inline-block' }}>✨ PERSONALIZED WELLNESS JOURNEY</span>
                                 <h2 className="section-title" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '2rem', fontWeight: '800', color: '#0F172A', margin: '0 0 6px' }}>How MindCare Works</h2>
-                                <p className="section-subtitle" style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.85rem', color: '#64748B', maxWidth: '520px', margin: '0 auto', lineHeight: '1.4' }}>Follow a simple, guided wellness journey—from creating your profile and sharing your thoughts to receiving personalized insights and accessing tools that support your emotional well-being every day.</p>
+                                <p className="section-subtitle" style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.85rem', color: '#64748B', maxWidth: '600px', margin: '0 auto', lineHeight: '1.4' }}>Follow a simple, guided journey—from creating your account and completing your personalized wellness session to receiving meaningful insights and accessing tools that support your emotional well-being every day.</p>
                             </div>
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '20px', width: '100%', maxWidth: '860px', margin: '0 auto 40px auto', position: 'relative' }}>
-                                <div style={{ position: 'absolute', top: '16px', left: '10%', right: '10%', height: '2px', background: 'linear-gradient(90deg, #3B82F6, #14B8A6)', zIndex: 0 }}></div>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '16px', width: '100%', maxWidth: '1060px', margin: '0 auto 40px auto', position: 'relative' }}>
+                                <div style={{ position: 'absolute', top: '20px', left: '8%', right: '8%', height: '2px', background: 'linear-gradient(90deg, #3B82F6, #14B8A6)', zIndex: 0 }}></div>
                                 {[
-                                    { step: '1', title: 'Create Account', desc: 'Register securely in seconds.' },
-                                    { step: '2', title: 'Choose Portal', desc: 'Tailored interface for you.' },
-                                    { step: '3', title: 'Wellness Session', desc: 'Guided interactive onboarding.' },
-                                    { step: '4', title: 'Wellness Profile', desc: 'Your comprehensive health index.' },
-                                    { step: '5', title: 'Access Dashboard', desc: 'Emotional support and tracking.' }
+                                    { step: '1', title: 'Create Account', desc: 'Securely create your MindCare account.' },
+                                    { step: '2', title: 'Choose Your Portal', desc: 'Select the Child or Parent Portal.' },
+                                    { step: '3', title: 'Complete Basic Profile', desc: 'Help us personalize your wellness journey.' },
+                                    { step: '4', title: 'Guided Wellness Session', desc: 'Complete conversations, emotion analysis, and assessment.' },
+                                    { step: '5', title: 'Receive Your Wellness Profile', desc: 'View your wellness score, recommendations, and Family Code.' },
+                                    { step: '6', title: 'Access Your Dashboard', desc: 'Continue with the MindCare Companion, Wellness Hub, Journal, Reports, and progress tracking.' }
                                 ].map((item, index) => (
                                     <div key={index} className="journey-step" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', zIndex: 1, animationDelay: `${index * 0.15}s` }}>
                                         <div className="step-circle" style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#EFF6FF', color: '#2563EB', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', fontSize: '1rem', border: '2px solid #3B82F6', marginBottom: '16px', transition: 'all 0.3s ease', boxShadow: '0 4px 10px rgba(37,99,235,0.15)' }}>
                                             {item.step}
                                         </div>
-                                        <h4 style={{ fontSize: '0.9rem', fontWeight: '800', color: '#0F172A', marginBottom: '6px' }}>{item.title}</h4>
-                                        <p style={{ fontSize: '0.75rem', color: '#64748B', lineHeight: '1.5' }}>{item.desc}</p>
+                                        <h4 style={{ fontSize: '0.85rem', fontWeight: '800', color: '#0F172A', marginBottom: '6px' }}>{item.title}</h4>
+                                        <p style={{ fontSize: '0.72rem', color: '#64748B', lineHeight: '1.4' }}>{item.desc}</p>
                                     </div>
                                 ))}
                             </div>
@@ -869,39 +872,39 @@ export default function App() {
                         </div>
 
                         {/* ===== CONTACT SECTION ===== */}
-                        <div id="section-contact" className="section-container" style={{ paddingTop: '60px', scrollMarginTop: '80px', paddingBottom: '60px' }}>
-                            <div className="section-header">
-                                <span className="section-tag">Get in Touch</span>
-                                <h2 className="section-title">We Would Love to Hear From You</h2>
-                                <p className="section-subtitle">Have questions, feedback, or suggestions? Reach out anytime!</p>
+                        <div id="section-contact" className="section-container" style={{ paddingTop: '60px', scrollMarginTop: '80px', paddingBottom: '60px', maxWidth: '640px', margin: '0 auto' }}>
+                            <div className="section-header text-center">
+                                <span className="section-tag" style={{ background: '#EFF6FF', color: '#2563EB', padding: '4px 14px', borderRadius: '50px', fontSize: '0.7rem', fontWeight: '800', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '8px', display: 'inline-block' }}>Get in Touch</span>
+                                <h2 className="section-title">Let's Connect</h2>
+                                <p className="section-subtitle">Questions, feedback or suggestions? We'd love to hear from you.</p>
                             </div>
-                            <div className="contact-layout">
-                                <div className="contact-info-panel">
-                                    <h3>Contact Information</h3>
-                                    <div className="contact-detail-item"><span className="detail-icon">&#128231;</span><div className="detail-text"><span className="label">Email Us</span><a href="mailto:tejaswiniwakure542@gmail.com">tejaswiniwakure542@gmail.com</a></div></div>
-                                    <div className="contact-detail-item"><span className="detail-icon">&#127760;</span><div className="detail-text"><span className="label">GitHub Profile</span><a href="https://github.com" target="_blank" rel="noreferrer">GitHub Project Link</a></div></div>
-                                    <div className="contact-detail-item"><span className="detail-icon">&#128188;</span><div className="detail-text"><span className="label">LinkedIn</span><a href="https://linkedin.com" target="_blank" rel="noreferrer">LinkedIn Connection</a></div></div>
-                                </div>
-                                <div className="contact-form-panel">
-                                    {!formSuccess ? (
-                                        <form onSubmit={handleContactSubmit}>
-                                            <div className="form-row">
-                                                <div className={`form-group ${contactErrors.name ? 'invalid' : ''}`}><label>Full Name</label><input type="text" placeholder="John Doe" value={contactName} onChange={(e) => setContactName(e.target.value)} />{contactErrors.name && <span className="error-msg">{contactErrors.name}</span>}</div>
-                                                <div className={`form-group ${contactErrors.email ? 'invalid' : ''}`}><label>Email Address</label><input type="email" placeholder="john@example.com" value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} />{contactErrors.email && <span className="error-msg">{contactErrors.email}</span>}</div>
-                                            </div>
-                                            <div className={`form-group ${contactErrors.subject ? 'invalid' : ''}`}><label>Subject</label><input type="text" placeholder="Feedback" value={contactSubject} onChange={(e) => setContactSubject(e.target.value)} />{contactErrors.subject && <span className="error-msg">{contactErrors.subject}</span>}</div>
-                                            <div className={`form-group ${contactErrors.message ? 'invalid' : ''}`}><label>Message</label><textarea rows="4" placeholder="Share your thoughts..." value={contactMessage} onChange={(e) => setContactMessage(e.target.value)}></textarea>{contactErrors.message && <span className="error-msg">{contactErrors.message}</span>}</div>
-                                            <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '12px', borderRadius: '10px', fontWeight: '700' }}>Send Message</button>
-                                        </form>
-                                    ) : (
-                                        <div style={{ textAlign: 'center', padding: '40px 20px' }}>
-                                            <div style={{ fontSize: '3rem', marginBottom: '12px' }}>&#9989;</div>
-                                            <h3 style={{ color: '#16A34A', marginBottom: '8px' }}>Message Sent!</h3>
-                                            <p style={{ color: '#64748B', fontSize: '0.88rem', marginBottom: '20px' }}>Thank you for reaching out. We will get back to you soon.</p>
-                                            <button onClick={handleFeedbackReset} className="btn btn-secondary" style={{ padding: '10px 24px', borderRadius: '10px' }}>Send Another</button>
+                            
+                            <div className="contact-form-panel" style={{ background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: '16px', padding: '32px', boxShadow: '0 10px 30px rgba(0,0,0,0.03)', marginBottom: '24px' }}>
+                                {!formSuccess ? (
+                                    <form onSubmit={handleContactSubmit}>
+                                        <div className="form-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+                                            <div className={`form-group ${contactErrors.name ? 'invalid' : ''}`} style={{ display: 'flex', flexDirection: 'column', gap: '6px', textAlign: 'left' }}><label style={{ fontSize: '0.8rem', fontWeight: '600', color: '#475569' }}>Name</label><input type="text" placeholder="John Doe" value={contactName} onChange={(e) => setContactName(e.target.value)} style={{ padding: '12px', borderRadius: '8px', border: '1px solid #CBD5E1', fontSize: '0.9rem' }} />{contactErrors.name && <span className="error-msg" style={{ color: '#EF4444', fontSize: '0.75rem' }}>{contactErrors.name}</span>}</div>
+                                            <div className={`form-group ${contactErrors.email ? 'invalid' : ''}`} style={{ display: 'flex', flexDirection: 'column', gap: '6px', textAlign: 'left' }}><label style={{ fontSize: '0.8rem', fontWeight: '600', color: '#475569' }}>Email</label><input type="email" placeholder="john@example.com" value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} style={{ padding: '12px', borderRadius: '8px', border: '1px solid #CBD5E1', fontSize: '0.9rem' }} />{contactErrors.email && <span className="error-msg" style={{ color: '#EF4444', fontSize: '0.75rem' }}>{contactErrors.email}</span>}</div>
                                         </div>
-                                    )}
-                                </div>
+                                        <div className={`form-group ${contactErrors.subject ? 'invalid' : ''}`} style={{ display: 'flex', flexDirection: 'column', gap: '6px', textAlign: 'left', marginBottom: '16px' }}><label style={{ fontSize: '0.8rem', fontWeight: '600', color: '#475569' }}>Subject</label><input type="text" placeholder="Feedback" value={contactSubject} onChange={(e) => setContactSubject(e.target.value)} style={{ padding: '12px', borderRadius: '8px', border: '1px solid #CBD5E1', fontSize: '0.9rem' }} />{contactErrors.subject && <span className="error-msg" style={{ color: '#EF4444', fontSize: '0.75rem' }}>{contactErrors.subject}</span>}</div>
+                                        <div className={`form-group ${contactErrors.message ? 'invalid' : ''}`} style={{ display: 'flex', flexDirection: 'column', gap: '6px', textAlign: 'left', marginBottom: '24px' }}><label style={{ fontSize: '0.8rem', fontWeight: '600', color: '#475569' }}>Message</label><textarea rows="4" placeholder="Share your thoughts..." value={contactMessage} onChange={(e) => setContactMessage(e.target.value)} style={{ padding: '12px', borderRadius: '8px', border: '1px solid #CBD5E1', fontSize: '0.9rem', resize: 'vertical' }}></textarea>{contactErrors.message && <span className="error-msg" style={{ color: '#EF4444', fontSize: '0.75rem' }}>{contactErrors.message}</span>}</div>
+                                        <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '14px', borderRadius: '10px', fontWeight: '700', background: 'linear-gradient(135deg, #1D4ED8 0%, #3B82F6 100%)', color: '#FFFFFF', border: 'none', cursor: 'pointer' }}>Send Message</button>
+                                    </form>
+                                ) : (
+                                    <div style={{ textAlign: 'center', padding: '40px 20px' }}>
+                                        <div style={{ fontSize: '3rem', marginBottom: '12px' }}>&#9989;</div>
+                                        <h3 style={{ color: '#16A34A', marginBottom: '8px' }}>Message Sent!</h3>
+                                        <p style={{ color: '#64748B', fontSize: '0.88rem', marginBottom: '20px' }}>Thank you for reaching out. We will get back to you soon.</p>
+                                        <button onClick={handleFeedbackReset} className="btn btn-secondary" style={{ padding: '10px 24px', borderRadius: '10px' }}>Send Another</button>
+                                    </div>
+                                )}
+                            </div>
+                            
+                            {/* Contact Footer Links */}
+                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '24px', fontSize: '0.85rem', color: '#64748B' }}>
+                                <span>&#128231; <a href="mailto:support@mindcare.com" style={{ color: '#64748B', textDecoration: 'none' }}>support@mindcare.com</a></span>
+                                <span>&#128205; Pune, India</span>
+                                <span>&#128188; <a href="https://linkedin.com" target="_blank" rel="noreferrer" style={{ color: '#64748B', textDecoration: 'none' }}>LinkedIn</a></span>
                             </div>
                         </div>
 
@@ -1302,67 +1305,41 @@ export default function App() {
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '28px', maxWidth: '760px', margin: '0 auto' }}>
 
                             {/* Child Portal Card */}
-                            <div className="role-card-premium">
-                                <div style={{ width: '100%' }}>
-                                    <div className="role-icon-group">
-                                        <div className="role-icon-wrapper-circle">
-                                            <UserRound size={22} />
-                                        </div>
-                                        <div className="role-icon-wrapper-circle">
-                                            <Brain size={22} />
-                                        </div>
-                                        <div className="role-icon-wrapper-circle">
-                                            <Sparkles size={22} />
-                                        </div>
-                                    </div>
-                                    <h3 style={{ fontSize: '1.25rem', fontWeight: '800', color: '#0F172A', marginBottom: '8px', textAlign: 'center' }}>Child Portal</h3>
-                                    <div style={{ display: 'block', textAlign: 'center', marginBottom: '16px' }}>
-                                        <span style={{ display: 'inline-block', background: '#EFF6FF', color: '#2563EB', fontSize: '0.75rem', fontWeight: '700', padding: '4px 12px', borderRadius: '50px' }}>Ages 13 – 30</span>
-                                    </div>
-                                    <p style={{ fontSize: '0.85rem', color: '#64748B', lineHeight: '1.6', marginBottom: '24px', textAlign: 'center' }}>
-                                        Track your mood, log reflections, take science-backed checks, chat with an AI companion, and build healthy daily habits.
-                                    </p>
+                            <div className="role-card-premium" style={{ background: '#FFFFFF', padding: '32px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', height: '100%' }}>
+                                <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: '#EFF6FF', color: '#2563EB', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px' }}>
+                                    <Brain size={28} />
                                 </div>
+                                <h3 style={{ fontSize: '1.25rem', fontWeight: '800', color: '#0F172A', marginBottom: '12px' }}>My Wellness Space</h3>
+                                <p style={{ fontSize: '0.85rem', color: '#64748B', lineHeight: '1.6', marginBottom: '32px', flexGrow: 1 }}>
+                                    Access your personalized wellness journey.
+                                </p>
                                 <div style={{ width: '100%' }}>
                                     {createdRoles.includes('teen') ? (
-                                        <button className="btn btn-primary" style={{ width: '100%', borderRadius: '100px' }} onClick={() => { setActiveRole('teen'); navigateTo('portal-teen'); }}>Enter Portal →</button>
+                                        <button className="btn btn-primary" style={{ width: '100%', borderRadius: '12px', background: 'linear-gradient(135deg, #1D4ED8 0%, #3B82F6 100%)', border: 'none', color: '#FFFFFF' }} onClick={() => { setActiveRole('teen'); navigateTo('portal-teen'); }}>Continue →</button>
                                     ) : (
-                                        <button className="btn btn-primary" style={{ width: '100%', borderRadius: '100px' }} onClick={() => {
+                                        <button className="btn btn-primary" style={{ width: '100%', borderRadius: '12px', background: 'linear-gradient(135deg, #1D4ED8 0%, #3B82F6 100%)', border: 'none', color: '#FFFFFF' }} onClick={() => {
                                             setActiveRole('teen');
                                             if (sessionCompleted) { navigateTo('portal-teen'); }
                                             else { setFfStep(0); setFfStepVisible(true); navigateTo('onboarding-teen'); }
-                                        }}>Get Started →</button>
+                                        }}>Continue →</button>
                                     )}
                                 </div>
                             </div>
 
                             {/* Parent Portal Card */}
-                            <div className="role-card-premium">
-                                <div style={{ width: '100%' }}>
-                                    <div className="role-icon-group">
-                                        <div className="role-icon-wrapper-circle">
-                                            <Users size={22} />
-                                        </div>
-                                        <div className="role-icon-wrapper-circle">
-                                            <ShieldCheck size={22} />
-                                        </div>
-                                        <div className="role-icon-wrapper-circle">
-                                            <HeartHandshake size={22} />
-                                        </div>
-                                    </div>
-                                    <h3 style={{ fontSize: '1.25rem', fontWeight: '800', color: '#0F172A', marginBottom: '8px', textAlign: 'center' }}>Parent Portal</h3>
-                                    <div style={{ display: 'block', textAlign: 'center', marginBottom: '16px' }}>
-                                        <span style={{ display: 'inline-block', background: '#F0FDF4', color: '#059669', fontSize: '0.75rem', fontWeight: '700', padding: '4px 12px', borderRadius: '50px' }}>Ages 30+</span>
-                                    </div>
-                                    <p style={{ fontSize: '0.85rem', color: '#64748B', lineHeight: '1.6', marginBottom: '24px', textAlign: 'center' }}>
-                                        Check wellness trend charts, secure connection status, and explore clinical parenting guidelines in a dedicated family dashboard.
-                                    </p>
+                            <div className="role-card-premium" style={{ background: '#FFFFFF', padding: '32px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', height: '100%' }}>
+                                <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: '#F0FDF4', color: '#059669', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px' }}>
+                                    <ShieldCheck size={28} />
                                 </div>
+                                <h3 style={{ fontSize: '1.25rem', fontWeight: '800', color: '#0F172A', marginBottom: '12px' }}>Family Dashboard</h3>
+                                <p style={{ fontSize: '0.85rem', color: '#64748B', lineHeight: '1.6', marginBottom: '32px', flexGrow: 1 }}>
+                                    Monitor your child's wellness progress.
+                                </p>
                                 <div style={{ width: '100%' }}>
                                     {createdRoles.includes('parent') ? (
-                                        <button className="btn btn-primary" style={{ width: '100%', borderRadius: '100px' }} onClick={() => { setActiveRole('parent'); navigateTo('portal-parent'); }}>Enter Portal →</button>
+                                        <button className="btn btn-primary" style={{ width: '100%', borderRadius: '12px', background: 'linear-gradient(135deg, #1D4ED8 0%, #3B82F6 100%)', border: 'none', color: '#FFFFFF' }} onClick={() => { setActiveRole('parent'); navigateTo('portal-parent'); }}>Continue →</button>
                                     ) : (
-                                        <button className="btn btn-primary" style={{ width: '100%', borderRadius: '100px' }} onClick={() => { setActiveRole('parent'); navigateTo('portal-parent'); }}>Get Started →</button>
+                                        <button className="btn btn-primary" style={{ width: '100%', borderRadius: '12px', background: 'linear-gradient(135deg, #1D4ED8 0%, #3B82F6 100%)', border: 'none', color: '#FFFFFF' }} onClick={() => { setActiveRole('parent'); navigateTo('portal-parent'); }}>Continue →</button>
                                     )}
                                 </div>
                             </div>
