@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import TeenDashboard from './TeenDashboard';
 import ParentDashboard from './ParentDashboard';
 import { Brain, Mic, Activity, BarChart2, Users, ShieldCheck, Sparkles, BadgeCheck, HeartHandshake, Check, UserRound } from 'lucide-react';
@@ -716,12 +716,6 @@ export default function App() {
                 {currentView === 'home' && (
                     <section className="app-view">
                         <div className="hero-container" style={{ textAlign: 'center', padding: '60px 24px', position: 'relative' }}>
-                            {/* Top Badge */}
-                            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#EFF6FF', color: '#1D4ED8', padding: '6px 18px', borderRadius: '50px', fontSize: '0.8rem', fontWeight: '700', marginBottom: '24px' }}>
-                                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#2563EB' }}></span>
-                                A Safe Space for Young Minds
-                            </div>
-
                             {/* Main Title */}
                             <h1 className="hero-title" style={{ fontSize: '3rem', fontWeight: '800', color: '#0F172A', lineHeight: '1.25', margin: '0 auto 16px auto', maxWidth: '840px', letterSpacing: '-0.02em' }}>
                                 Helping Children Feel Heard, <br />
@@ -729,23 +723,22 @@ export default function App() {
                             </h1>
 
                             {/* Subtitle */}
-                            <p className="hero-subtitle" style={{ fontSize: '1rem', color: '#64748B', maxWidth: '640px', margin: '0 auto 32px auto', lineHeight: '1.6' }}>
+                            <p className="hero-subtitle" style={{ fontSize: '1rem', color: '#64748B', maxWidth: '640px', margin: '0 auto 24px auto', lineHeight: '1.6' }}>
                                 Personalized conversations, wellness assessments, and daily activities designed to build healthy emotional habits for every child.
                             </p>
 
-                            {/* Hero Action — single CTA */}
-                            <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', marginBottom: '40px' }}>
-                                <button className="btn" style={{ padding: '12px 32px', borderRadius: '12px', background: 'linear-gradient(135deg, #1D4ED8 0%, #3B82F6 100%)', border: 'none', color: '#FFFFFF', fontWeight: '700', fontSize: '0.92rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', boxShadow: '0 4px 14px rgba(37,99,235,0.35)' }} onClick={() => navigateTo('auth')}>
-                                    Get Started <span>→</span>
-                                </button>
+                            {/* Top Badge (Moved Down) */}
+                            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#EFF6FF', color: '#1D4ED8', padding: '6px 18px', borderRadius: '50px', fontSize: '0.8rem', fontWeight: '700', marginBottom: '40px', boxShadow: '0 4px 12px rgba(29, 78, 216, 0.1)' }}>
+                                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#2563EB', animation: 'pulse 2s infinite' }}></span>
+                                A Safe Space for Young Minds
                             </div>
 
                             {/* Bottom Feature Chips */}
-                            <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', flexWrap: 'wrap', maxWidth: '780px', margin: '0 auto' }}>
-                                <span style={{ background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: '50px', padding: '8px 18px', fontSize: '0.8rem', color: '#475569', fontWeight: '600' }}>Personalized Wellness</span>
-                                <span style={{ background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: '50px', padding: '8px 18px', fontSize: '0.8rem', color: '#475569', fontWeight: '600' }}>Secure & Confidential</span>
-                                <span style={{ background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: '50px', padding: '8px 18px', fontSize: '0.8rem', color: '#475569', fontWeight: '600' }}>Evidence-Based</span>
-                                <span style={{ background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: '50px', padding: '8px 18px', fontSize: '0.8rem', color: '#475569', fontWeight: '600' }}>Daily Support</span>
+                            <div className="feature-chips-container" style={{ display: 'flex', justifyContent: 'center', gap: '12px', flexWrap: 'wrap', maxWidth: '780px', margin: '0 auto' }}>
+                                <span className="feature-chip"><Sparkles size={16} /> Personalized Wellness</span>
+                                <span className="feature-chip"><ShieldCheck size={16} /> Secure & Confidential</span>
+                                <span className="feature-chip"><BadgeCheck size={16} /> Evidence-Based</span>
+                                <span className="feature-chip"><HeartHandshake size={16} /> Daily Support</span>
                             </div>
                         </div>
 
@@ -806,12 +799,12 @@ export default function App() {
                                     { step: '4', title: 'Wellness Profile', desc: 'Your comprehensive health index.' },
                                     { step: '5', title: 'Access Dashboard', desc: 'Emotional support and tracking.' }
                                 ].map((item, index) => (
-                                    <div key={index} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', zIndex: 1 }}>
-                                        <div style={{ width: '34px', height: '34px', borderRadius: '50%', background: '#EFF6FF', color: '#2563EB', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', fontSize: '0.85rem', border: '2px solid #3B82F6', marginBottom: '12px' }}>
+                                    <div key={index} className="journey-step" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', zIndex: 1, animationDelay: `${index * 0.15}s` }}>
+                                        <div className="step-circle" style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#EFF6FF', color: '#2563EB', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', fontSize: '1rem', border: '2px solid #3B82F6', marginBottom: '16px', transition: 'all 0.3s ease', boxShadow: '0 4px 10px rgba(37,99,235,0.15)' }}>
                                             {item.step}
                                         </div>
-                                        <h4 style={{ fontSize: '0.85rem', fontWeight: '800', color: '#0F172A', marginBottom: '4px' }}>{item.title}</h4>
-                                        <p style={{ fontSize: '0.72rem', color: '#64748B', lineHeight: '1.4' }}>{item.desc}</p>
+                                        <h4 style={{ fontSize: '0.9rem', fontWeight: '800', color: '#0F172A', marginBottom: '6px' }}>{item.title}</h4>
+                                        <p style={{ fontSize: '0.75rem', color: '#64748B', lineHeight: '1.5' }}>{item.desc}</p>
                                     </div>
                                 ))}
                             </div>
@@ -857,19 +850,19 @@ export default function App() {
                             </div>
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
                                 {[
-                                    { icon: '&#128105;&#8205;&#9877;&#65039;', name: 'Dr. Priya Sharma', spec: 'Child & Adolescent Psychiatry', exp: '12 years', rating: '4.9' },
-                                    { icon: '&#128104;&#8205;&#9877;&#65039;', name: 'Dr. Arjun Mehta', spec: 'Cognitive Behavioral Therapy', exp: '9 years', rating: '4.8' },
-                                    { icon: '&#128105;&#8205;&#9877;&#65039;', name: 'Dr. Neha Patil', spec: 'Family & Teen Counseling', exp: '7 years', rating: '5.0' }
+                                    { photo: 'https://randomuser.me/api/portraits/women/68.jpg', name: 'Dr. Priya Sharma', spec: 'Child & Adolescent Psychiatry', exp: '12 years', rating: '4.9' },
+                                    { photo: 'https://randomuser.me/api/portraits/men/32.jpg', name: 'Dr. Arjun Mehta', spec: 'Cognitive Behavioral Therapy', exp: '9 years', rating: '4.8' },
+                                    { photo: 'https://randomuser.me/api/portraits/women/44.jpg', name: 'Dr. Neha Patil', spec: 'Family & Teen Counseling', exp: '7 years', rating: '5.0' }
                                 ].map((t, i) => (
-                                    <div key={i} className="about-card" style={{ padding: '24px', textAlign: 'center' }}>
-                                        <div style={{ fontSize: '2.8rem', marginBottom: '12px' }}>{i === 1 ? '&#128104;&#8205;&#9877;' : '&#128105;&#8205;&#9877;'}</div>
-                                        <h3 style={{ fontSize: '1rem', fontWeight: '700', color: '#0F172A', margin: '0 0 4px' }}>{t.name}</h3>
-                                        <p style={{ fontSize: '0.78rem', color: '#2563EB', fontWeight: '600', margin: '0 0 8px' }}>{t.spec}</p>
-                                        <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', fontSize: '0.75rem', color: '#64748B' }}>
-                                            <span>Exp: {t.exp}</span>
-                                            <span>Rating: {t.rating}</span>
+                                    <div key={i} className="about-card therapist-card" style={{ padding: '24px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                        <img src={t.photo} alt={t.name} style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover', marginBottom: '16px', border: '3px solid #EFF6FF', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }} />
+                                        <h3 style={{ fontSize: '1rem', fontWeight: '700', color: '#0F172A', margin: '0 0 6px' }}>{t.name}</h3>
+                                        <p style={{ fontSize: '0.78rem', color: '#2563EB', fontWeight: '600', margin: '0 0 12px' }}>{t.spec}</p>
+                                        <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', fontSize: '0.75rem', color: '#64748B', marginBottom: '20px' }}>
+                                            <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>&#9200; {t.exp}</span>
+                                            <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>&#11088; {t.rating}</span>
                                         </div>
-                                        <button onClick={() => navigateTo('auth')} style={{ marginTop: '16px', padding: '8px 20px', borderRadius: '8px', background: '#EFF6FF', color: '#2563EB', border: '1px solid #BFDBFE', fontWeight: '600', fontSize: '0.8rem', cursor: 'pointer' }}>Book Session</button>
+                                        <button className="btn btn-secondary" onClick={() => navigateTo('auth')} style={{ padding: '8px 20px', borderRadius: '8px', background: '#EFF6FF', color: '#2563EB', border: '1px solid #BFDBFE', fontWeight: '600', fontSize: '0.8rem', cursor: 'pointer', transition: 'all 0.2s', width: '100%' }}>Book Session</button>
                                     </div>
                                 ))}
                             </div>
