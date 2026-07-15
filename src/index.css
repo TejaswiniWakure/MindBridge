@@ -260,56 +260,15 @@ button {
     display: flex;
     align-items: center;
     gap: 12px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    outline: none;
 }
 
-.logo-icon {
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    background: var(--gradient-bg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: var(--shadow-soft);
-    padding: 6px;
-    transition: var(--transition-smooth);
-}
+/* No hover effects on logo */
 
-.nav-logo:hover .logo-icon {
-    transform: rotate(15deg) scale(1.05);
-}
-
-.brand-wrapper {
-    display: flex;
-    align-items: center;
-}
-
-.brand-short {
-    font-weight: 800;
-    font-size: 1.5rem;
-    color: var(--color-dark);
-    letter-spacing: -0.5px;
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.brand-full {
-    max-width: 0;
-    opacity: 0;
-    overflow: hidden;
-    white-space: nowrap;
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--color-dark);
-    transition: max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, margin-left 0.3s ease;
-}
-
-.nav-logo:hover .brand-full {
-    max-width: 150px;
-    opacity: 1;
-    margin-left: 8px;
-}
 
 /* Menu Right-aligned */
 .nav-menu {
@@ -1502,9 +1461,9 @@ button {
 
 /* 17. FOOTER AREA */
 .footer {
-    background: #FFFFFF;
-    border-top: 1px solid rgba(37, 99, 235, 0.05);
-    padding: 24px 24px 12px 24px;
+    background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+    border-top: none;
+    padding: 56px 24px 24px 24px;
     position: relative;
     z-index: 10;
     margin-top: 30px;
@@ -1516,8 +1475,8 @@ button {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    gap: 30px;
-    margin-bottom: 20px;
+    gap: 40px;
+    margin-bottom: 32px;
 }
 
 .footer-brand-section {
@@ -1528,28 +1487,28 @@ button {
     display: flex;
     align-items: center;
     gap: 10px;
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: var(--color-dark);
-    margin-bottom: 8px;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #FFFFFF;
+    margin-bottom: 12px;
 }
 
 .footer-logo svg {
-    width: 26px;
-    height: 26px;
+    width: 28px;
+    height: 28px;
 }
 
 .footer-tagline {
     font-size: 0.85rem;
-    color: var(--color-text-light);
+    color: #94A3B8;
     max-width: 300px;
-    line-height: 1.5;
+    line-height: 1.65;
 }
 
 .footer-links-grid {
     display: flex;
     flex-wrap: wrap;
-    gap: 40px;
+    gap: 48px;
 }
 
 /* Footer expand-on-hover groups */
@@ -1558,84 +1517,90 @@ button {
 }
 
 .group-title {
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: var(--color-dark);
-    margin-bottom: 10px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #FFFFFF;
+    margin-bottom: 14px;
     position: relative;
     cursor: default;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
 }
 
 .group-title::after {
     content: '';
     position: absolute;
     left: 0;
-    bottom: -4px;
-    width: 18px;
+    bottom: -6px;
+    width: 20px;
     height: 2px;
-    background-color: var(--color-primary);
+    background: linear-gradient(90deg, #3B82F6, #06B6D4);
+    border-radius: 2px;
     transition: var(--transition-smooth);
 }
 
 .footer-group:hover .group-title::after {
-    width: 36px;
+    width: 40px;
 }
 
 .group-list {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
 }
 
 .footer-link {
     font-size: 0.85rem;
-    color: var(--color-text-light);
-    transition: var(--transition-smooth);
+    color: #64748B;
+    transition: all 0.2s ease;
     display: inline-block;
     background: none;
     border: none;
+    cursor: pointer;
 }
 
 .footer-link:hover {
-    color: var(--color-primary);
+    color: #93C5FD;
     transform: translateX(4px);
 }
 
 .footer-newsletter-group {
-    max-width: 240px;
+    max-width: 260px;
 }
 
 .newsletter-desc {
-    font-size: 0.8rem;
-    color: var(--color-text-light);
-    margin-bottom: 10px;
+    font-size: 0.82rem;
+    color: #64748B;
+    margin-bottom: 12px;
+    line-height: 1.5;
 }
 
 .subscribe-success-msg {
     font-size: 0.75rem;
     font-weight: 600;
-    color: #047857;
-    margin-top: 6px;
+    color: #34D399;
+    margin-top: 8px;
     display: block;
 }
 
 .footer-bottom {
     max-width: 1200px;
     margin: 0 auto;
-    border-top: 1px solid rgba(148, 163, 184, 0.1);
-    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    padding-top: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-size: 0.8rem;
-    color: var(--color-text-light);
+    color: #475569;
 }
 
 @media (max-width: 600px) {
     .footer-container { flex-direction: column; }
     .footer-links-grid { flex-direction: column; gap: 30px; }
 }
+
 
 @keyframes slideUpFade {
     from {
@@ -2828,4 +2793,52 @@ button {
     color: #2563EB !important;
     transform: translateX(4px);
 }
+
+/* Premium Choice Workspace styles */
+.role-card-premium {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 24px;
+    padding: 40px 30px;
+    text-align: center;
+    box-shadow: 0 10px 30px -10px rgba(15,23,42,0.04);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.role-card-premium:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px -15px rgba(37,99,235,0.08), 0 0 0 2px rgba(37,99,235,0.06);
+    border-color: #2563EB;
+}
+
+.role-icon-group {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 24px;
+    color: #2563EB;
+}
+
+.role-icon-wrapper-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #EFF6FF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.role-card-premium:hover .role-icon-wrapper-circle {
+    background: #2563EB;
+    color: #FFFFFF;
+    transform: scale(1.08) rotate(-4deg);
+}
+
 

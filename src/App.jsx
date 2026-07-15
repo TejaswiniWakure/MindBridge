@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import TeenDashboard from './TeenDashboard';
 import ParentDashboard from './ParentDashboard';
+import { Brain, Mic, Activity, BarChart2, Users, ShieldCheck, Sparkles, BadgeCheck, HeartHandshake, Check, UserRound } from 'lucide-react';
+
+
 
 // API Configuration (points to Node/Express server)
 const API_URL = 'http://localhost:5000/api';
@@ -51,6 +54,27 @@ export default function App() {
     const [generatedFamilyCode, setGeneratedFamilyCode] = useState('');
     const [showTeenCodeScreen, setShowTeenCodeScreen] = useState(false);
     const [parentRequestSent, setParentRequestSent] = useState(false);
+
+    // --- FEELFREE ONBOARDING SESSION STATES ---
+    const [sessionCompleted, setSessionCompleted] = useState(() => {
+        try { return localStorage.getItem('mc_session_done') === 'true'; } catch { return false; }
+    });
+    const [ffStep, setFfStep] = useState(0); // 0=welcome, 1-6=steps, 7=profile complete
+    const [ffStepVisible, setFfStepVisible] = useState(true);
+    const [ffProfile, setFfProfile] = useState({ name: '', age: '', gender: '', school: '' });
+    const [ffMood, setFfMood] = useState('');
+    const [ffSleepHours, setFfSleepHours] = useState('');
+    const [ffStressLevel, setFfStressLevel] = useState('');
+    const [ffSocialComfort, setFfSocialComfort] = useState('');
+    const [ffExercise, setFfExercise] = useState('');
+    const [ffEnjoyActivities, setFfEnjoyActivities] = useState([]);
+    const [ffAiMessages, setFfAiMessages] = useState([
+        { sender: 'bot', text: "Hi! I'm your MindCare AI Companion. Tell me how you're feeling today and I'll be here to support you! 💙" }
+    ]);
+    const [ffAiInput, setFfAiInput] = useState('');
+    const [ffAssessAnswers, setFfAssessAnswers] = useState({0:0,1:0,2:0,3:0,4:0});
+    const [ffWellnessScore, setFfWellnessScore] = useState(null);
+    const [ffCompletedDate, setFfCompletedDate] = useState('');
 
     // Teen Quick Form State
     const [teenForm, setTeenForm] = useState({
@@ -288,6 +312,21 @@ export default function App() {
         setCurrentView(view);
         window.history.pushState({ currentView: view, parentPortalView: null }, '');
         window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    // --- SCROLL TO SECTION (for single-page nav) ---
+    const scrollToSection = (sectionId) => {
+        if (currentView !== 'home') {
+            setCurrentView('home');
+            window.history.pushState({ currentView: 'home' }, '');
+            setTimeout(() => {
+                const el = document.getElementById(sectionId);
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        } else {
+            const el = document.getElementById(sectionId);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
     };
 
 
@@ -550,65 +589,63 @@ export default function App() {
             {!['portal-teen', 'portal-parent', 'portal-therapist'].includes(currentView) && (
             <header className="navbar">
                 <div className="navbar-container">
-                    {/* Logo & Brand */}
-                    <button onClick={() => navigateTo('home')} className="nav-logo" style={{ cursor: 'pointer' }}>
-                        <div className="logo-icon" style={{ display: 'flex', alignItems: 'center' }}>
-                            <img src="/logo.jpg" alt="MindBridge Logo" style={{ width: '32px', height: '32px', borderRadius: '4px', objectFit: 'contain' }} />
+                    {/* Logo & Brand — MindCare with Heart */}
+                    <button onClick={() => navigateTo('home')} className="nav-logo" style={{ cursor: 'pointer', background: 'none', border: 'none', display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none', outline: 'none' }}>
+                        <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'linear-gradient(135deg, #1D4ED8 0%, #3B82F6 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"/>
+                            </svg>
                         </div>
-                        <div className="brand-wrapper">
-                            <span className="brand-short">MB</span>
-                            <span className="brand-full">Mind Bridge</span>
-                        </div>
+                        <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: '800', fontSize: '1.1rem', color: '#0F172A', letterSpacing: '-0.02em' }}>MindCare</span>
                     </button>
 
-                    {/* Navigation Menu Links */}
+                    {/* Navigation Menu Links — all scroll on same page */}
                     <nav className="nav-menu">
                         <ul className="nav-list">
                             <li>
                                 <button 
-                                    className={`nav-link ${currentView === 'home' ? 'active-nav' : ''}`}
-                                    onClick={() => navigateTo('home')}
+                                    className="nav-link"
+                                    onClick={() => { navigateTo('home'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                                 >
                                     Home
                                 </button>
                             </li>
                             <li>
                                 <button 
-                                    className={`nav-link ${currentView === 'features' ? 'active-nav' : ''}`}
-                                    onClick={() => navigateTo('features')}
+                                    className="nav-link"
+                                    onClick={() => scrollToSection('section-features')}
                                 >
                                     Features
                                 </button>
                             </li>
                             <li>
                                 <button 
-                                    className={`nav-link ${currentView === 'how-it-works' ? 'active-nav' : ''}`}
-                                    onClick={() => navigateTo('how-it-works')}
+                                    className="nav-link"
+                                    onClick={() => scrollToSection('section-how-it-works')}
                                 >
                                     How It Works
                                 </button>
                             </li>
                             <li>
                                 <button 
-                                    className={`nav-link ${currentView === 'about' ? 'active-nav' : ''}`}
-                                    onClick={() => navigateTo('about')}
+                                    className="nav-link"
+                                    onClick={() => scrollToSection('section-about')}
                                 >
                                     About
                                 </button>
                             </li>
                             <li>
                                 <button 
-                                    className={`nav-link ${currentView === 'therapist' ? 'active-nav' : ''}`}
-                                    onClick={() => navigateTo('therapist')}
+                                    className="nav-link"
+                                    onClick={() => scrollToSection('section-therapist')}
                                 >
                                     Therapist
                                 </button>
                             </li>
-
                             <li>
                                 <button 
-                                    className={`nav-link ${currentView === 'contact' ? 'active-nav' : ''}`}
-                                    onClick={() => navigateTo('contact')}
+                                    className="nav-link"
+                                    onClick={() => scrollToSection('section-contact')}
                                 >
                                     Contact
                                 </button>
@@ -645,23 +682,16 @@ export default function App() {
                                             SWITCH ROLE
                                         </div>
                                         
-                                        {/* Teen Switcher */}
                                         {activeRole !== 'teen' && (
                                             <button className="dropdown-item" onClick={() => { setActiveRole('teen'); navigateTo('portal-teen'); setRoleMenuOpen(false); }} style={{ width: '100%', textAlign: 'left', background: 'none', border: 'none', padding: '8px 16px', fontSize: '0.82rem', color: 'var(--color-dark)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}>
                                                 <span>🦊 Teen / Adults</span>
                                             </button>
                                         )}
-
-                                        {/* Parent Switcher */}
                                         {activeRole !== 'parent' && (
                                             <button className="dropdown-item" onClick={() => { setActiveRole('parent'); navigateTo('portal-parent'); setRoleMenuOpen(false); }} style={{ width: '100%', textAlign: 'left', background: 'none', border: 'none', padding: '8px 16px', fontSize: '0.82rem', color: 'var(--color-dark)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}>
                                                 <span>👨‍👩‍👧 Parents</span>
                                             </button>
                                         )}
-
-
-
-                                        
                                         <div style={{ borderTop: '1px solid var(--color-border)', marginTop: '8px', paddingTop: '4px' }}>
                                             <button className="dropdown-item" onClick={() => { handleLogout(); setRoleMenuOpen(false); }} style={{ width: '100%', textAlign: 'left', background: 'none', border: 'none', padding: '8px 16px', fontSize: '0.82rem', color: '#EF4444', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}>
                                                 <span>🚪 Log Out</span>
@@ -703,13 +733,10 @@ export default function App() {
                                 Personalized conversations, wellness assessments, and daily activities designed to build healthy emotional habits for every child.
                             </p>
 
-                            {/* Hero Action Buttons */}
+                            {/* Hero Action — single CTA */}
                             <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', marginBottom: '40px' }}>
-                                <button className="btn" style={{ padding: '12px 32px', borderRadius: '12px', background: '#1D8EEB', border: 'none', color: '#FFFFFF', fontWeight: '700', fontSize: '0.92rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }} onClick={() => navigateTo('auth')}>
-                                    Get Started Free <span>→</span>
-                                </button>
-                                <button className="btn" style={{ padding: '12px 32px', borderRadius: '12px', background: '#FFFFFF', border: '1px solid #E2E8F0', color: '#334155', fontWeight: '700', fontSize: '0.92rem', cursor: 'pointer' }} onClick={() => navigateTo('features')}>
-                                    Explore Features
+                                <button className="btn" style={{ padding: '12px 32px', borderRadius: '12px', background: 'linear-gradient(135deg, #1D4ED8 0%, #3B82F6 100%)', border: 'none', color: '#FFFFFF', fontWeight: '700', fontSize: '0.92rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', boxShadow: '0 4px 14px rgba(37,99,235,0.35)' }} onClick={() => navigateTo('auth')}>
+                                    Get Started <span>→</span>
                                 </button>
                             </div>
 
@@ -722,170 +749,176 @@ export default function App() {
                             </div>
                         </div>
 
-                        {/* Interactive How it Works section to push footer below the fold */}
-                        <div className="section-container" style={{ paddingTop: '20px', marginTop: '20px' }}>
+                        {/* ===== 6 CORE FEATURES ===== */}
+                        <div id="section-features" className="section-container" style={{ paddingTop: '60px', marginTop: '20px', scrollMarginTop: '80px' }}>
                             <div className="section-header">
-                                <span className="section-tag">How It Works</span>
-                                <h2 className="section-title">Bridging the Gap with Compassion &amp; Privacy</h2>
-                                <p className="section-subtitle">A secure digital environment where teenagers, parents, and therapists work together.</p>
+                                <span className="section-tag">CORE FEATURES</span>
+                                <h2 className="section-title">Designed for Parental Clarity &amp; Teen Independence</h2>
+                                <p className="section-subtitle">Empowering tools that bridge communication gaps while preserving private boundaries.</p>
                             </div>
-
                             <div className="features-grid">
                                 <div className="feature-card">
-                                    <div className="feature-icon-wrapper" style={{ fontSize: '1.3rem' }}>🔒</div>
-                                    <h3>Privacy-First Dashboards</h3>
-                                    <p>Teenagers write in complete confidence. All journals are fully encrypted. Parents access high-level wellness indexes without invading private logs.</p>
+                                    <div className="feature-icon-wrapper"><Brain size={22} color="#2563EB" /></div>
+                                    <h3>MindCare Companion</h3>
+                                    <p>AI-powered emotional support and personalized guidance available anytime.</p>
                                 </div>
                                 <div className="feature-card">
-                                    <div className="feature-icon-wrapper" style={{ fontSize: '1.3rem' }}>⚡</div>
-                                    <h3>Real-Time Coping Skills</h3>
-                                    <p>An AI-guided journal analyzes emotional text patterns to suggest box breathing, square breathing, and mindfulness prompts instantly when stress thresholds spike.</p>
+                                    <div className="feature-icon-wrapper"><Mic size={22} color="#2563EB" /></div>
+                                    <h3>Voice Companion</h3>
+                                    <p>Talk through your feelings naturally with interactive voice journaling.</p>
                                 </div>
                                 <div className="feature-card">
-                                    <div className="feature-icon-wrapper" style={{ fontSize: '1.3rem' }}>🤝</div>
-                                    <h3>Clinical Connections</h3>
-                                    <p>Secure, integrated portals allow families to easily consult licensed adolescent counselor directories and safely share progress metrics with professionals.</p>
+                                    <div className="feature-icon-wrapper"><Activity size={22} color="#2563EB" /></div>
+                                    <h3>Mental Health Assessment</h3>
+                                    <p>Take scientifically validated mental wellness tests to track progress.</p>
+                                </div>
+                                <div className="feature-card">
+                                    <div className="feature-icon-wrapper"><BarChart2 size={22} color="#2563EB" /></div>
+                                    <h3>Personalized Wellness Profile</h3>
+                                    <p>A comprehensive, data-driven dashboard of your emotional journey.</p>
+                                </div>
+                                <div className="feature-card">
+                                    <div className="feature-icon-wrapper"><Users size={22} color="#2563EB" /></div>
+                                    <h3>Parent Support Dashboard</h3>
+                                    <p>Coordinated care, clinical insights, and safety nets for families.</p>
+                                </div>
+                                <div className="feature-card">
+                                    <div className="feature-icon-wrapper"><ShieldCheck size={22} color="#2563EB" /></div>
+                                    <h3>Privacy &amp; Security</h3>
+                                    <p>Clinical-grade data protection ensuring complete confidentiality.</p>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Interactive Wellness Check-in Widget (User Attraction) */}
-                        <div className="section-container" style={{ paddingTop: '10px', marginTop: '0' }}>
-                            <div className="section-header">
-                                <span className="section-tag">Interactive Check-in</span>
-                                <h2 className="section-title">How Are You Feeling Today?</h2>
-                                <p className="section-subtitle">Click an emotion below to receive an instant, evidence-based coping tool.</p>
+                        {/* ===== HOW MINDCARE WORKS — 5-step flow ===== */}
+                        <div id="section-how-it-works" className="section-container" style={{ paddingTop: '60px', marginTop: '0', scrollMarginTop: '80px' }}>
+                            <div className="section-header text-center" style={{ marginBottom: '40px' }}>
+                                <span className="section-tag" style={{ background: '#F0FDF4', color: '#16A34A', padding: '4px 14px', borderRadius: '50px', fontSize: '0.7rem', fontWeight: '800', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '8px', display: 'inline-block' }}>⚡ PERSONALIZED WELLNESS JOURNEY</span>
+                                <h2 className="section-title" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '2rem', fontWeight: '800', color: '#0F172A', margin: '0 0 6px' }}>How MindCare Works</h2>
+                                <p className="section-subtitle" style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.85rem', color: '#64748B', maxWidth: '520px', margin: '0 auto', lineHeight: '1.4' }}>Follow a simple, guided wellness journey—from creating your profile and sharing your thoughts to receiving personalized insights and accessing tools that support your emotional well-being every day.</p>
                             </div>
-
-                            {/* Emoji Buttons Row */}
-                            <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', flexWrap: 'wrap', marginBottom: '24px' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '20px', width: '100%', maxWidth: '860px', margin: '0 auto 40px auto', position: 'relative' }}>
+                                <div style={{ position: 'absolute', top: '16px', left: '10%', right: '10%', height: '2px', background: 'linear-gradient(90deg, #3B82F6, #14B8A6)', zIndex: 0 }}></div>
                                 {[
-                                    { mood: 'Happy', emoji: '😀' },
-                                    { mood: 'Calm', emoji: '😌' },
-                                    { mood: 'Tired', emoji: '😴' },
-                                    { mood: 'Anxious', emoji: '😰' },
-                                    { mood: 'Sad', emoji: '😢' }
-                                ].map(item => (
-                                    <button 
-                                        key={item.mood}
-                                        className={`btn ${homeCheckInMood === item.mood ? 'btn-primary' : 'btn-secondary'}`}
-                                        style={{ padding: '10px 18px', display: 'flex', gap: '8px', alignItems: 'center', fontSize: '0.9rem', borderRadius: '50px' }}
-                                        onClick={() => setHomeCheckInMood(homeCheckInMood === item.mood ? null : item.mood)}
-                                    >
-                                        <span>{item.emoji}</span>
-                                        <span>{item.mood}</span>
-                                    </button>
+                                    { step: '1', title: 'Create Account', desc: 'Register securely in seconds.' },
+                                    { step: '2', title: 'Choose Portal', desc: 'Tailored interface for you.' },
+                                    { step: '3', title: 'Wellness Session', desc: 'Guided interactive onboarding.' },
+                                    { step: '4', title: 'Wellness Profile', desc: 'Your comprehensive health index.' },
+                                    { step: '5', title: 'Access Dashboard', desc: 'Emotional support and tracking.' }
+                                ].map((item, index) => (
+                                    <div key={index} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', zIndex: 1 }}>
+                                        <div style={{ width: '34px', height: '34px', borderRadius: '50%', background: '#EFF6FF', color: '#2563EB', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', fontSize: '0.85rem', border: '2px solid #3B82F6', marginBottom: '12px' }}>
+                                            {item.step}
+                                        </div>
+                                        <h4 style={{ fontSize: '0.85rem', fontWeight: '800', color: '#0F172A', marginBottom: '4px' }}>{item.title}</h4>
+                                        <p style={{ fontSize: '0.72rem', color: '#64748B', lineHeight: '1.4' }}>{item.desc}</p>
+                                    </div>
                                 ))}
                             </div>
-
-                            {/* Render Coping Advice Card if mood is selected */}
-                            {homeCheckInMood && (
-                                <div className="feature-card" style={{ width: '100%', maxWidth: '700px', margin: '0 auto', padding: '24px', alignSelf: 'center', display: 'block', border: '1px solid var(--color-border)', background: 'linear-gradient(180deg, #FFFFFF 0%, #F5F9FF 100%)', animation: 'slideUpFade 0.3s ease' }}>
-                                    {homeCheckInMood === 'Anxious' && (
-                                        <div>
-                                            <h3 style={{ color: 'var(--color-primary)', fontSize: '1.15rem', marginBottom: '6px' }}>😰 Recommended: Box Breathing Grounding</h3>
-                                            <p style={{ fontSize: '0.88rem', color: 'var(--color-text)', marginBottom: '14px', lineHeight: '1.5' }}>
-                                                <strong>Instructions:</strong> Breathe in slowly through your nose for 4 seconds. Hold your breath for 4 seconds. Exhale gently through your mouth for 4 seconds. Hold empty for 4 seconds. Repeat 4 times.
-                                            </p>
-                                            <div style={{ background: '#FFFFFF', padding: '10px 14px', borderRadius: '8px', fontSize: '0.78rem', color: 'var(--color-text-light)', borderLeft: '3px solid var(--color-primary)' }}>
-                                                💡 <em>Why it works:</em> Box breathing regulates autonomic nervous system responses, lowering your heart rate and easing panic signals.
-                                            </div>
-                                        </div>
-                                    )}
-                                    {homeCheckInMood === 'Sad' && (
-                                        <div>
-                                            <h3 style={{ color: 'var(--color-primary)', fontSize: '1.15rem', marginBottom: '6px' }}>😢 Recommended: 5-4-3-2-1 Grounding Method</h3>
-                                            <p style={{ fontSize: '0.88rem', color: 'var(--color-text)', marginBottom: '14px', lineHeight: '1.5' }}>
-                                                <strong>Instructions:</strong> Acknowledge 5 things you see around you, 4 things you can touch, 3 things you hear, 2 things you can smell, and 1 thing you can taste.
-                                            </p>
-                                            <div style={{ background: '#FFFFFF', padding: '10px 14px', borderRadius: '8px', fontSize: '0.78rem', color: 'var(--color-text-light)', borderLeft: '3px solid var(--color-primary)' }}>
-                                                💡 <em>Why it works:</em> Grounding shifts cognitive processing from heavy internal sadness back to your sensory surroundings.
-                                            </div>
-                                        </div>
-                                    )}
-                                    {homeCheckInMood === 'Tired' && (
-                                        <div>
-                                            <h3 style={{ color: 'var(--color-primary)', fontSize: '1.15rem', marginBottom: '6px' }}>😴 Recommended: 10-Minute Screen-Free Reset</h3>
-                                            <p style={{ fontSize: '0.88rem', color: 'var(--color-text)', marginBottom: '14px', lineHeight: '1.5' }}>
-                                                <strong>Instructions:</strong> Lock your phone, close laptop screens, stand up, and gently stretch your shoulders and neck. Drink a glass of cold water.
-                                            </p>
-                                            <div style={{ background: '#FFFFFF', padding: '10px 14px', borderRadius: '8px', fontSize: '0.78rem', color: 'var(--color-text-light)', borderLeft: '3px solid var(--color-primary)' }}>
-                                                💡 <em>Why it works:</em> Physical movements and taking visual breaks from blue light restores vascular circulation and relieves eye strain.
-                                            </div>
-                                        </div>
-                                    )}
-                                    {homeCheckInMood === 'Calm' && (
-                                        <div>
-                                            <h3 style={{ color: 'var(--color-primary)', fontSize: '1.15rem', marginBottom: '6px' }}>😌 Recommended: Reflective Gratitude Journaling</h3>
-                                            <p style={{ fontSize: '0.88rem', color: 'var(--color-text)', marginBottom: '14px', lineHeight: '1.5' }}>
-                                                <strong>Instructions:</strong> Write down 2 things you are grateful for today, or record a small victory you achieved, no matter how minor it seems.
-                                            </p>
-                                            <div style={{ background: '#FFFFFF', padding: '10px 14px', borderRadius: '8px', fontSize: '0.78rem', color: 'var(--color-text-light)', borderLeft: '3px solid var(--color-primary)' }}>
-                                                💡 <em>Why it works:</em> Documenting wins during calm states builds positive neural connections and strengthens resilience pathways.
-                                            </div>
-                                        </div>
-                                    )}
-                                    {homeCheckInMood === 'Happy' && (
-                                        <div>
-                                            <h3 style={{ color: 'var(--color-primary)', fontSize: '1.15rem', marginBottom: '6px' }}>😀 Recommended: Share Your Positive Energy</h3>
-                                            <p style={{ fontSize: '0.88rem', color: 'var(--color-text)', marginBottom: '14px', lineHeight: '1.5' }}>
-                                                <strong>Instructions:</strong> Send a quick text to a family member, log this entry in your private journal, or reflect on what specifically triggered this joy.
-                                            </p>
-                                            <div style={{ background: '#FFFFFF', padding: '10px 14px', borderRadius: '8px', fontSize: '0.78rem', color: 'var(--color-text-light)', borderLeft: '3px solid var(--color-primary)' }}>
-                                                💡 <em>Why it works:</em> Sharing positive moments extends their cognitive benefits and reinforces social support frameworks.
-                                            </div>
-                                        </div>
-                                    )}
-                                    
-                                    <button 
-                                        className="btn btn-primary btn-sm" 
-                                        style={{ marginTop: '16px' }}
-                                        onClick={() => navigateTo('auth')}
-                                    >
-                                        Log this privately in MindBridge
-                                    </button>
-                                </div>
-                            )}
                         </div>
 
-                        {/* Success Stories Testimonials */}
-                        <div className="section-container" style={{ paddingTop: '10px', marginTop: '0' }}>
+                        {/* ===== ABOUT SECTION ===== */}
+                        <div id="section-about" className="section-container" style={{ paddingTop: '60px', scrollMarginTop: '80px' }}>
                             <div className="section-header">
-                                <span className="section-tag">Success Stories</span>
-                                <h2 className="section-title">Loved by Teens, Trusted by Parents</h2>
-                                <p className="section-subtitle">Hear from families who are improving communication and wellness.</p>
+                                <span className="section-tag">Our Identity</span>
+                                <h2 className="section-title">Empowering Family Mental Wellness</h2>
+                                <p className="section-subtitle">Combining clinical foundations with interactive, privacy-first technology.</p>
                             </div>
-
-                            <div className="features-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))' }}>
-                                <div className="feature-card" style={{ padding: '24px' }}>
-                                    <p style={{ fontStyle: 'italic', fontSize: '0.9rem', marginBottom: '16px', color: 'var(--color-text)' }}>
-                                        "MindBridge gives me a safe space to write how I feel. My parents know I am doing okay, but they don't read my diary. It's the perfect balance of support and independence."
-                                    </p>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                        <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--bg-alt)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', fontSize: '0.8rem', color: 'var(--color-primary)' }}>MK</div>
-                                        <div>
-                                            <h4 style={{ fontSize: '0.88rem', fontWeight: '600', color: 'var(--color-dark)' }}>Maya K.</h4>
-                                            <span style={{ fontSize: '0.72rem', color: 'var(--color-text-light)' }}>High School Teen, 16</span>
-                                        </div>
-                                    </div>
+                            <div className="about-content-wrapper" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '30px', alignItems: 'start' }}>
+                                <div className="about-main-card" style={{ padding: '24px' }}>
+                                    <h3 style={{ fontSize: '1.15rem', fontWeight: '700', color: 'var(--color-dark)', marginBottom: '10px' }}>Bridging Communication Gaps</h3>
+                                    <p style={{ fontSize: '0.88rem', color: 'var(--color-text)', marginBottom: '12px', lineHeight: '1.55' }}>At MindCare, we construct a secure, supportive digital space where teens, parents, and adolescent therapists connect and work in alignment.</p>
+                                    <p style={{ fontSize: '0.88rem', color: 'var(--color-text)', marginBottom: '20px', lineHeight: '1.55' }}>We believe emotional awareness and early intervention should not feel like surveillance. Our system uses advanced, clinical-grade check-ins to build healthy communications.</p>
+                                    <ul className="group-list" style={{ gap: '10px', listStyle: 'none', paddingLeft: '0' }}>
+                                        <li style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', fontSize: '0.82rem' }}><span style={{ color: 'var(--color-primary)', fontWeight: 'bold' }}>&#10003;</span><div><strong>End-to-End Privacy:</strong> Teenagers express themselves without parental monitoring.</div></li>
+                                        <li style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', fontSize: '0.82rem' }}><span style={{ color: 'var(--color-primary)', fontWeight: 'bold' }}>&#10003;</span><div><strong>Evidence-Based Prompts:</strong> Guided coping skills parsed dynamically by our journal model.</div></li>
+                                        <li style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', fontSize: '0.82rem' }}><span style={{ color: 'var(--color-primary)', fontWeight: 'bold' }}>&#10003;</span><div><strong>Integrated Safety Net:</strong> Instant counselor routing when elevated distress signals are tracked.</div></li>
+                                    </ul>
                                 </div>
-
-                                <div className="feature-card" style={{ padding: '24px' }}>
-                                    <p style={{ fontStyle: 'italic', fontSize: '0.9rem', marginBottom: '16px', color: 'var(--color-text)' }}>
-                                        "It gives me peace of mind. I can spot wellness trends and understand when my teen is stressed, allowing me to check in appropriately without feeling like an intruder."
-                                    </p>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                        <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--bg-alt)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', fontSize: '0.8rem', color: 'var(--color-primary)' }}>DM</div>
-                                        <div>
-                                            <h4 style={{ fontSize: '0.88rem', fontWeight: '600', color: 'var(--color-dark)' }}>David M.</h4>
-                                            <span style={{ fontSize: '0.72rem', color: 'var(--color-text-light)' }}>Parent of 15-year old</span>
-                                        </div>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                                    <div className="about-card" style={{ padding: '20px' }}>
+                                        <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginBottom: '8px' }}><div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--bg-alt)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.95rem' }}>&#128065;</div><h3 style={{ fontSize: '1rem', fontWeight: '700', color: 'var(--color-dark)', margin: 0 }}>Our Vision</h3></div>
+                                        <p style={{ fontSize: '0.82rem', color: 'var(--color-text-light)', lineHeight: '1.5' }}>Fostering a world where everyone enjoys instant, destigmatized access to mental wellness support, strengthening family connections and community wellbeing.</p>
+                                    </div>
+                                    <div className="about-card" style={{ padding: '20px' }}>
+                                        <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginBottom: '8px' }}><div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--bg-alt)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.95rem' }}>&#127919;</div><h3 style={{ fontSize: '1rem', fontWeight: '700', color: 'var(--color-dark)', margin: 0 }}>Our Mission</h3></div>
+                                        <p style={{ fontSize: '0.82rem', color: 'var(--color-text-light)', lineHeight: '1.5' }}>Delivering innovative, AI-powered emotional wellness tracking tools that encourage self-reflection, facilitate early detection, and seamlessly bridge clinical care.</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+                        {/* ===== THERAPIST SECTION ===== */}
+                        <div id="section-therapist" className="section-container" style={{ paddingTop: '60px', scrollMarginTop: '80px' }}>
+                            <div className="section-header">
+                                <span className="section-tag">Professional Support</span>
+                                <h2 className="section-title">Connect with Certified Therapists</h2>
+                                <p className="section-subtitle">Licensed adolescent mental health professionals available to guide your wellness journey.</p>
+                            </div>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+                                {[
+                                    { icon: '&#128105;&#8205;&#9877;&#65039;', name: 'Dr. Priya Sharma', spec: 'Child & Adolescent Psychiatry', exp: '12 years', rating: '4.9' },
+                                    { icon: '&#128104;&#8205;&#9877;&#65039;', name: 'Dr. Arjun Mehta', spec: 'Cognitive Behavioral Therapy', exp: '9 years', rating: '4.8' },
+                                    { icon: '&#128105;&#8205;&#9877;&#65039;', name: 'Dr. Neha Patil', spec: 'Family & Teen Counseling', exp: '7 years', rating: '5.0' }
+                                ].map((t, i) => (
+                                    <div key={i} className="about-card" style={{ padding: '24px', textAlign: 'center' }}>
+                                        <div style={{ fontSize: '2.8rem', marginBottom: '12px' }}>{i === 1 ? '&#128104;&#8205;&#9877;' : '&#128105;&#8205;&#9877;'}</div>
+                                        <h3 style={{ fontSize: '1rem', fontWeight: '700', color: '#0F172A', margin: '0 0 4px' }}>{t.name}</h3>
+                                        <p style={{ fontSize: '0.78rem', color: '#2563EB', fontWeight: '600', margin: '0 0 8px' }}>{t.spec}</p>
+                                        <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', fontSize: '0.75rem', color: '#64748B' }}>
+                                            <span>Exp: {t.exp}</span>
+                                            <span>Rating: {t.rating}</span>
+                                        </div>
+                                        <button onClick={() => navigateTo('auth')} style={{ marginTop: '16px', padding: '8px 20px', borderRadius: '8px', background: '#EFF6FF', color: '#2563EB', border: '1px solid #BFDBFE', fontWeight: '600', fontSize: '0.8rem', cursor: 'pointer' }}>Book Session</button>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* ===== CONTACT SECTION ===== */}
+                        <div id="section-contact" className="section-container" style={{ paddingTop: '60px', scrollMarginTop: '80px', paddingBottom: '60px' }}>
+                            <div className="section-header">
+                                <span className="section-tag">Get in Touch</span>
+                                <h2 className="section-title">We Would Love to Hear From You</h2>
+                                <p className="section-subtitle">Have questions, feedback, or suggestions? Reach out anytime!</p>
+                            </div>
+                            <div className="contact-layout">
+                                <div className="contact-info-panel">
+                                    <h3>Contact Information</h3>
+                                    <div className="contact-detail-item"><span className="detail-icon">&#128231;</span><div className="detail-text"><span className="label">Email Us</span><a href="mailto:tejaswiniwakure542@gmail.com">tejaswiniwakure542@gmail.com</a></div></div>
+                                    <div className="contact-detail-item"><span className="detail-icon">&#127760;</span><div className="detail-text"><span className="label">GitHub Profile</span><a href="https://github.com" target="_blank" rel="noreferrer">GitHub Project Link</a></div></div>
+                                    <div className="contact-detail-item"><span className="detail-icon">&#128188;</span><div className="detail-text"><span className="label">LinkedIn</span><a href="https://linkedin.com" target="_blank" rel="noreferrer">LinkedIn Connection</a></div></div>
+                                </div>
+                                <div className="contact-form-panel">
+                                    {!formSuccess ? (
+                                        <form onSubmit={handleContactSubmit}>
+                                            <div className="form-row">
+                                                <div className={orm-group }><label>Full Name</label><input type="text" placeholder="John Doe" value={contactName} onChange={(e) => setContactName(e.target.value)} />{contactErrors.name && <span className="error-msg">{contactErrors.name}</span>}</div>
+                                                <div className={orm-group }><label>Email Address</label><input type="email" placeholder="john@example.com" value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} />{contactErrors.email && <span className="error-msg">{contactErrors.email}</span>}</div>
+                                            </div>
+                                            <div className={orm-group }><label>Subject</label><input type="text" placeholder="Feedback" value={contactSubject} onChange={(e) => setContactSubject(e.target.value)} />{contactErrors.subject && <span className="error-msg">{contactErrors.subject}</span>}</div>
+                                            <div className={orm-group }><label>Message</label><textarea rows="4" placeholder="Share your thoughts..." value={contactMessage} onChange={(e) => setContactMessage(e.target.value)}></textarea>{contactErrors.message && <span className="error-msg">{contactErrors.message}</span>}</div>
+                                            <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '12px', borderRadius: '10px', fontWeight: '700' }}>Send Message</button>
+                                        </form>
+                                    ) : (
+                                        <div style={{ textAlign: 'center', padding: '40px 20px' }}>
+                                            <div style={{ fontSize: '3rem', marginBottom: '12px' }}>&#9989;</div>
+                                            <h3 style={{ color: '#16A34A', marginBottom: '8px' }}>Message Sent!</h3>
+                                            <p style={{ color: '#64748B', fontSize: '0.88rem', marginBottom: '20px' }}>Thank you for reaching out. We will get back to you soon.</p>
+                                            <button onClick={handleFeedbackReset} className="btn btn-secondary" style={{ padding: '10px 24px', borderRadius: '10px' }}>Send Another</button>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
                     </section>
                 )}
+
+
+
+                {/* ================= VIEW: FEATURES ================= */}
+
 
                 {/* ================= VIEW: FEATURES ================= */}
                 {currentView === 'features' && (
@@ -898,54 +931,34 @@ export default function App() {
 
                         <div className="features-grid">
                             <div className="feature-card">
-                                <div className="feature-icon-wrapper">🧠</div>
-                                <h3>🧠 AI Mental Health Assistant</h3>
-                                <p>Get personalized emotional support and wellness guidance anytime.</p>
+                                <div className="feature-icon-wrapper"><Brain size={22} color="#2563EB" /></div>
+                                <h3>MindCare Companion</h3>
+                                <p>AI-powered emotional support and personalized guidance available anytime.</p>
                             </div>
                             <div className="feature-card">
-                                <div className="feature-icon-wrapper">😊</div>
-                                <h3>😊 Mood Tracker</h3>
-                                <p>Log your daily emotions and visualize your mood trends.</p>
+                                <div className="feature-icon-wrapper"><Mic size={22} color="#2563EB" /></div>
+                                <h3>Voice Companion</h3>
+                                <p>Talk through your feelings naturally with interactive voice journaling.</p>
                             </div>
                             <div className="feature-card">
-                                <div className="feature-icon-wrapper">📊</div>
-                                <h3>📊 Mental Health Assessment</h3>
-                                <p>Take scientifically validated mental wellness tests.</p>
+                                <div className="feature-icon-wrapper"><Activity size={22} color="#2563EB" /></div>
+                                <h3>Mental Health Assessment</h3>
+                                <p>Take scientifically validated mental wellness tests to track progress.</p>
                             </div>
                             <div className="feature-card">
-                                <div className="feature-icon-wrapper">📖</div>
-                                <h3>📖 Personal Journal</h3>
-                                <p>Write your thoughts privately and track emotional growth.</p>
+                                <div className="feature-icon-wrapper"><BarChart2 size={22} color="#2563EB" /></div>
+                                <h3>Personalized Wellness Profile</h3>
+                                <p>A comprehensive, data-driven dashboard of your emotional journey.</p>
                             </div>
                             <div className="feature-card">
-                                <div className="feature-icon-wrapper">🧘</div>
-                                <h3>🧘 Meditation &amp; Mindfulness</h3>
-                                <p>Practice guided breathing and meditation exercises.</p>
+                                <div className="feature-icon-wrapper"><Users size={22} color="#2563EB" /></div>
+                                <h3>Parent Support Dashboard</h3>
+                                <p>Coordinated care, clinical insights, and safety nets for families.</p>
                             </div>
                             <div className="feature-card">
-                                <div className="feature-icon-wrapper">😴</div>
-                                <h3>😴 Sleep Insights</h3>
-                                <p>Monitor sleep habits and receive improvement suggestions.</p>
-                            </div>
-                            <div className="feature-card">
-                                <div className="feature-icon-wrapper">🎯</div>
-                                <h3>🎯 Goals &amp; Habits</h3>
-                                <p>Build healthy routines with daily goals and reminders.</p>
-                            </div>
-                            <div className="feature-card">
-                                <div className="feature-icon-wrapper">👨‍👩‍👧</div>
-                                <h3>👨‍👩‍👧 Parent Dashboard</h3>
-                                <p>Allow parents to monitor overall wellness with privacy controls.</p>
-                            </div>
-                            <div className="feature-card">
-                                <div className="feature-icon-wrapper">👩‍⚕️</div>
-                                <h3>👩‍⚕️ Therapist Support</h3>
-                                <p>Book appointments and connect with mental health professionals.</p>
-                            </div>
-                            <div className="feature-card card-highlight">
-                                <div className="feature-icon-wrapper">🚨</div>
-                                <h3>🚨 Emergency Support</h3>
-                                <p>Access instant help and emergency resources when needed.</p>
+                                <div className="feature-icon-wrapper"><ShieldCheck size={22} color="#2563EB" /></div>
+                                <h3>Privacy &amp; Security</h3>
+                                <p>Clinical-grade data protection ensuring complete confidentiality.</p>
                             </div>
                         </div>
                     </section>
@@ -1284,200 +1297,348 @@ export default function App() {
                     </section>
                 )}
 
-                {/* ================= VIEW: CHOOSE ROLE ================= */}
+                {/* ================= VIEW: SELECT WORKSPACE ================= */}
                 {currentView === 'role' && (
                     <section className="app-view section-container">
                         <div className="section-header text-center">
-                            <h2 className="section-title">Choose Your Portal</h2>
-                            <p className="section-subtitle">Select the portal that best matches you and begin your wellness journey.</p>
+                            <span className="section-tag" style={{ background: '#EFF6FF', color: '#2563EB', padding: '4px 14px', borderRadius: '50px', fontSize: '0.7rem', fontWeight: '800', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '8px', display: 'inline-block' }}>⚡ FEELFREE WORKSPACES</span>
+                            <h2 className="section-title">Select Your Workspace</h2>
+                            <p className="section-subtitle">Select the portal that best matches your role to continue securely.</p>
                         </div>
 
-                        <div className="role-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px', maxWidth: '720px', margin: '0 auto' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '28px', maxWidth: '760px', margin: '0 auto' }}>
 
-                            {/* Teen / Adults Card */}
-                            <div className="role-card" style={{ border: '2px solid #DBEAFE', borderRadius: '20px', padding: '32px 24px', textAlign: 'center', background: '#fff', boxShadow: '0 8px 32px rgba(37,99,235,0.07)' }}>
-                                <div style={{ fontSize: '3rem', marginBottom: '12px' }}>🧑</div>
-                                <h3 style={{ fontSize: '1.3rem', fontWeight: '800', color: '#1E293B', margin: '0 0 8px' }}>Teen / Adults</h3>
-                                <span style={{ display: 'inline-block', background: '#EFF6FF', color: '#2563EB', fontSize: '0.75rem', fontWeight: '700', padding: '4px 12px', borderRadius: '50px', marginBottom: '12px' }}>Ages 13 – 30</span>
-                                <p style={{ fontSize: '0.83rem', color: '#64748B', lineHeight: '1.6', marginBottom: '20px' }}>
-                                    Track your mood, write private journals, complete mental health assessments, chat with AI companion, and build wellness habits.
-                                </p>
-                                {createdRoles.includes('teen') ? (
-                                    <button className="btn btn-primary role-continue-btn" style={{ width: '100%' }} onClick={() => { setActiveRole('teen'); navigateTo('portal-teen'); }}>Enter Portal →</button>
-                                ) : (
-                                    <button className="btn btn-secondary role-continue-btn" style={{ width: '100%' }} onClick={() => navigateTo('onboarding-teen')}>Get Started →</button>
-                                )}
+                            {/* Child Portal Card */}
+                            <div className="role-card-premium">
+                                <div style={{ width: '100%' }}>
+                                    <div className="role-icon-group">
+                                        <div className="role-icon-wrapper-circle">
+                                            <UserRound size={22} />
+                                        </div>
+                                        <div className="role-icon-wrapper-circle">
+                                            <Brain size={22} />
+                                        </div>
+                                        <div className="role-icon-wrapper-circle">
+                                            <Sparkles size={22} />
+                                        </div>
+                                    </div>
+                                    <h3 style={{ fontSize: '1.25rem', fontWeight: '800', color: '#0F172A', marginBottom: '8px', textAlign: 'center' }}>Child Portal</h3>
+                                    <div style={{ display: 'block', textAlign: 'center', marginBottom: '16px' }}>
+                                        <span style={{ display: 'inline-block', background: '#EFF6FF', color: '#2563EB', fontSize: '0.75rem', fontWeight: '700', padding: '4px 12px', borderRadius: '50px' }}>Ages 13 – 30</span>
+                                    </div>
+                                    <p style={{ fontSize: '0.85rem', color: '#64748B', lineHeight: '1.6', marginBottom: '24px', textAlign: 'center' }}>
+                                        Track your mood, log reflections, take science-backed checks, chat with an AI companion, and build healthy daily habits.
+                                    </p>
+                                </div>
+                                <div style={{ width: '100%' }}>
+                                    {createdRoles.includes('teen') ? (
+                                        <button className="btn btn-primary" style={{ width: '100%', borderRadius: '100px' }} onClick={() => { setActiveRole('teen'); navigateTo('portal-teen'); }}>Enter Portal →</button>
+                                    ) : (
+                                        <button className="btn btn-primary" style={{ width: '100%', borderRadius: '100px' }} onClick={() => {
+                                            setActiveRole('teen');
+                                            if (sessionCompleted) { navigateTo('portal-teen'); }
+                                            else { setFfStep(0); setFfStepVisible(true); navigateTo('onboarding-teen'); }
+                                        }}>Get Started →</button>
+                                    )}
+                                </div>
                             </div>
 
-                            {/* Parents Card */}
-                            <div className="role-card" style={{ border: '2px solid #D1FAE5', borderRadius: '20px', padding: '32px 24px', textAlign: 'center', background: '#fff', boxShadow: '0 8px 32px rgba(16,185,129,0.07)' }}>
-                                <div style={{ fontSize: '3rem', marginBottom: '12px' }}>👨‍👩‍👧</div>
-                                <h3 style={{ fontSize: '1.3rem', fontWeight: '800', color: '#1E293B', margin: '0 0 8px' }}>Parents</h3>
-                                <span style={{ display: 'inline-block', background: '#F0FDF4', color: '#059669', fontSize: '0.75rem', fontWeight: '700', padding: '4px 12px', borderRadius: '50px', marginBottom: '12px' }}>Ages 30+</span>
-                                <p style={{ fontSize: '0.83rem', color: '#64748B', lineHeight: '1.6', marginBottom: '20px' }}>
-                                    Manage your own wellness and monitor your child's wellbeing securely using a Family Code. No private content is ever shared.
-                                </p>
-                                {createdRoles.includes('parent') ? (
-                                    <button className="btn btn-primary role-continue-btn" style={{ width: '100%', background: 'linear-gradient(135deg,#059669,#10B981)', border: 'none' }} onClick={() => { setActiveRole('parent'); navigateTo('portal-parent'); }}>Enter Portal →</button>
-                                ) : (
-                                    <button className="btn btn-secondary role-continue-btn" style={{ width: '100%' }} onClick={() => { setActiveRole('parent'); navigateTo('portal-parent'); }}>Get Started →</button>
-                                )}
+                            {/* Parent Portal Card */}
+                            <div className="role-card-premium">
+                                <div style={{ width: '100%' }}>
+                                    <div className="role-icon-group">
+                                        <div className="role-icon-wrapper-circle">
+                                            <Users size={22} />
+                                        </div>
+                                        <div className="role-icon-wrapper-circle">
+                                            <ShieldCheck size={22} />
+                                        </div>
+                                        <div className="role-icon-wrapper-circle">
+                                            <HeartHandshake size={22} />
+                                        </div>
+                                    </div>
+                                    <h3 style={{ fontSize: '1.25rem', fontWeight: '800', color: '#0F172A', marginBottom: '8px', textAlign: 'center' }}>Parent Portal</h3>
+                                    <div style={{ display: 'block', textAlign: 'center', marginBottom: '16px' }}>
+                                        <span style={{ display: 'inline-block', background: '#F0FDF4', color: '#059669', fontSize: '0.75rem', fontWeight: '700', padding: '4px 12px', borderRadius: '50px' }}>Ages 30+</span>
+                                    </div>
+                                    <p style={{ fontSize: '0.85rem', color: '#64748B', lineHeight: '1.6', marginBottom: '24px', textAlign: 'center' }}>
+                                        Check wellness trend charts, secure connection status, and explore clinical parenting guidelines in a dedicated family dashboard.
+                                    </p>
+                                </div>
+                                <div style={{ width: '100%' }}>
+                                    {createdRoles.includes('parent') ? (
+                                        <button className="btn btn-primary" style={{ width: '100%', borderRadius: '100px' }} onClick={() => { setActiveRole('parent'); navigateTo('portal-parent'); }}>Enter Portal →</button>
+                                    ) : (
+                                        <button className="btn btn-primary" style={{ width: '100%', borderRadius: '100px' }} onClick={() => { setActiveRole('parent'); navigateTo('portal-parent'); }}>Get Started →</button>
+                                    )}
+                                </div>
                             </div>
 
                         </div>
                     </section>
                 )}
 
-                {/* ================= ONBOARDING: TEEN ================= */}
-                {currentView === 'onboarding-teen' && (
-                    <section className="onboarding-wrapper">
-                        <div className="onboarding-card" style={{ maxWidth: '780px' }}>
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '24px' }}>
-                                {showTeenCodeScreen ? (
-                                    <div style={{ textAlign: 'center', padding: '20px 10px', animation: 'slideUpFade 0.4s ease' }}>
-                                        <div style={{ fontSize: '3rem', marginBottom: '16px' }}>🎉</div>
-                                        <h2 style={{ fontSize: '1.5rem', fontWeight: '700', color: 'var(--color-dark)', marginBottom: '8px' }}>Your Secure Family Code</h2>
-                                        <p style={{ fontSize: '0.9rem', color: 'var(--color-text-light)', marginBottom: '24px' }}>
-                                            Share this Family Code with your parent to connect your accounts securely.
-                                        </p>
-                                        <div style={{ background: 'var(--bg-alt)', border: '2px dashed var(--color-primary-light)', padding: '16px 24px', borderRadius: 'var(--radius-md)', display: 'inline-block', fontSize: '1.6rem', fontWeight: '700', color: 'var(--color-primary)', letterSpacing: '2px', marginBottom: '24px', fontFamily: 'monospace' }}>
-                                            {generatedFamilyCode}
-                                        </div>
-                                        <p style={{ fontSize: '0.8rem', color: 'var(--color-text-light)', maxWidth: '400px', margin: '0 auto 24px auto', lineHeight: '1.4' }}>
-                                            Your parent will enter this code during onboarding to link profiles without accessing your private journals.
-                                        </p>
-                                        <button className="btn btn-primary" style={{ minWidth: '200px' }} onClick={() => navigateTo('portal-teen')}>
-                                            Finish &amp; Continue
-                                        </button>
-                                    </div>
-                                ) : (
-                                    <div className="onboarding-columns-grid">
-                                        <div>
-                                            <h2 style={{ textAlign: 'left', fontSize: '1.5rem', marginBottom: '4px' }}>Welcome! Let's personalize your experience. 👋</h2>
-                                            <p className="onboarding-sub" style={{ textAlign: 'left', marginBottom: '20px', fontSize: '0.85rem' }}>Complete your profile to personalize your mental wellness journey.</p>
-                                            
-                                            {/* Validation Errors */}
-                                            {Object.keys(onboardingErrors).length > 0 && (
-                                                <div className="onboarding-error-box">
-                                                    <ul>
-                                                        {Object.values(onboardingErrors).map((err, i) => <li key={i}>• {err}</li>)}
-                                                    </ul>
-                                                </div>
-                                            )}
 
-                                            <div className="avatar-selector-container">
-                                                <span className="avatar-selector-label" style={{ fontSize: '0.82rem' }}>Profile Picture (Optional)</span>
-                                                <div className="avatar-grid" style={{ gap: '8px', marginBottom: '16px' }}>
-                                                    {['🦊', '🐯', '🐼', '🐨', '🦁'].map(av => (
-                                                        <button 
-                                                            key={av} 
-                                                            type="button" 
-                                                            className={`avatar-btn ${teenForm.profilePic === av ? 'selected' : ''}`}
-                                                            onClick={() => setTeenForm(prev => ({ ...prev, profilePic: av }))}
-                                                            style={{ width: '40px', height: '40px', fontSize: '1.2rem' }}
-                                                        >
-                                                            {av}
-                                                        </button>
+                {/* ================= ONBOARDING: TEEN ================= */}
+                {currentView === 'onboarding-teen' && (() => {
+                    const FF_STEPS = [
+                        { tag: 'STEP 1 OF 6', title: 'Your Basic Profile', desc: 'Help us personalise your journey.' },
+                        { tag: 'STEP 2 OF 6', title: 'How Are You Feeling?', desc: 'Share your current emotional state.' },
+                        { tag: 'STEP 3 OF 6', title: 'Daily Habits & Lifestyle', desc: 'Tell us about your daily routine.' },
+                        { tag: 'STEP 4 OF 6', title: 'AI Companion Chat', desc: 'Have a short conversation with your MindCare companion.' },
+                        { tag: 'STEP 5 OF 6', title: 'Wellness Assessment', desc: 'Answer a quick mental wellness check.' },
+                        { tag: 'STEP 6 OF 6', title: 'Your Wellness Profile', desc: 'Review your personalised profile.' },
+                    ];
+                    const MOODS = ['😊 Happy','😌 Calm','😴 Tired','😰 Anxious','😢 Sad','😡 Frustrated'];
+                    const ACTIVITIES = ['Reading','Music','Sports','Art','Gaming','Cooking','Nature walks','Journaling'];
+                    const ASSESS_Q = [
+                        'Feeling nervous, anxious, or on edge?',
+                        'Not being able to stop worrying?',
+                        'Feeling down, depressed, or hopeless?',
+                        'Trouble falling or staying asleep?',
+                        'Feeling tired or having little energy?'
+                    ];
+
+                    const goToStep = (next) => {
+                        setFfStepVisible(false);
+                        setTimeout(() => { setFfStep(next); setFfStepVisible(true); }, 300);
+                    };
+
+                    const handleFfAiSend = () => {
+                        if (!ffAiInput.trim()) return;
+                        const userMsg = { sender: 'user', text: ffAiInput };
+                        setFfAiMessages(prev => [...prev, userMsg]);
+                        setFfAiInput('');
+                        setTimeout(() => {
+                            const replies = [
+                                "That's really helpful to know! 💙 Remember, your feelings are completely valid.",
+                                "Thank you for sharing that with me. I'm always here to listen and support you! 🌿",
+                                "I hear you. Let's work together on your wellness journey step by step. 🌟",
+                            ];
+                            setFfAiMessages(prev => [...prev, { sender: 'bot', text: replies[Math.floor(Math.random()*replies.length)] }]);
+                        }, 900);
+                    };
+
+                    const handleCompleteSession = () => {
+                        const score = Math.round(70 + (Object.values(ffAssessAnswers).reduce((a,b)=>a+b,0) / 15) * -20 + Math.random()*10);
+                        const clamped = Math.max(40, Math.min(95, score));
+                        setFfWellnessScore(clamped);
+                        const date = new Date().toLocaleDateString('en-IN', { day:'numeric', month:'long', year:'numeric' });
+                        setFfCompletedDate(date);
+                        try { localStorage.setItem('mc_session_done', 'true'); localStorage.setItem('mc_wellness_score', clamped); } catch(e){}
+                        setSessionCompleted(true);
+                        goToStep(7);
+                    };
+
+                    const stepFill = ffStep === 0 ? 0 : Math.round(((ffStep) / 6) * 100);
+
+                    // STEP 7: Session Complete card
+                    if (ffStep === 7) return (
+                        <section style={{ minHeight:'100vh', background:'linear-gradient(135deg,#F8FAFC,#EFF6FF)', display:'flex', alignItems:'center', justifyContent:'center', padding:'40px 24px', fontFamily:"'Inter',sans-serif" }}>
+                            <div style={{ background:'#fff', borderRadius:'28px', padding:'48px 40px', maxWidth:'520px', width:'100%', border:'1px solid #E2E8F0', boxShadow:'0 12px 40px rgba(15,23,42,0.06)', textAlign:'center' }}>
+                                <div style={{ width:'72px', height:'72px', borderRadius:'50%', background:'linear-gradient(135deg,#10B981,#059669)', display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 20px', fontSize:'2rem' }}>✓</div>
+                                <span style={{ display:'inline-block', background:'#F0FDF4', color:'#16A34A', fontSize:'0.72rem', fontWeight:'800', padding:'4px 14px', borderRadius:'50px', letterSpacing:'0.05em', textTransform:'uppercase', marginBottom:'12px' }}>SESSION COMPLETED</span>
+                                <h2 style={{ fontFamily:"'Lora',serif", fontSize:'1.8rem', fontWeight:'700', color:'#0F172A', margin:'0 0 8px' }}>Your Wellness Profile is Ready!</h2>
+                                <p style={{ fontSize:'0.88rem', color:'#64748B', marginBottom:'28px', lineHeight:'1.6' }}>Completed on {ffCompletedDate}. Your personalised MindCare dashboard is now active.</p>
+                                <div style={{ background:'#F8FAFC', border:'1px solid #E2E8F0', borderRadius:'16px', padding:'20px', marginBottom:'28px' }}>
+                                    <div style={{ fontSize:'0.75rem', color:'#64748B', fontWeight:'700', marginBottom:'4px', textTransform:'uppercase', letterSpacing:'0.05em' }}>Overall Wellness Score</div>
+                                    <div style={{ fontSize:'3.5rem', fontWeight:'900', color: ffWellnessScore >= 70 ? '#10B981' : ffWellnessScore >= 50 ? '#F59E0B' : '#EF4444', lineHeight:1 }}>{ffWellnessScore}<span style={{ fontSize:'1.2rem', color:'#94A3B8' }}>/100</span></div>
+                                    <div style={{ fontSize:'0.8rem', color:'#64748B', marginTop:'6px' }}>{ffWellnessScore >= 70 ? '🌟 Good — Keep going!' : ffWellnessScore >= 50 ? '💛 Fair — Let us improve together' : '💙 Needs attention — We are here for you'}</div>
+                                </div>
+                                <div style={{ display:'flex', gap:'12px' }}>
+                                    <button className="btn btn-primary" style={{ flex:1 }} onClick={() => navigateTo('portal-teen')}>Go to Dashboard →</button>
+                                    <button className="btn btn-secondary" style={{ flex:1 }} onClick={() => { goToStep(5); }}>Start Reassessment</button>
+                                </div>
+                            </div>
+                        </section>
+                    );
+
+                    return (
+                        <section style={{ minHeight:'100vh', background:'linear-gradient(135deg,#F8FAFC 0%,#EFF6FF 50%,#F0FDF4 100%)', display:'flex', alignItems:'center', justifyContent:'center', padding:'40px 24px', fontFamily:"'Inter',sans-serif" }}>
+                            {/* WELCOME SCREEN */}
+                            {ffStep === 0 ? (
+                                <div style={{ background:'#fff', borderRadius:'28px', padding:'56px 44px', maxWidth:'560px', width:'100%', border:'1px solid #E2E8F0', boxShadow:'0 12px 40px rgba(15,23,42,0.05)', textAlign:'center' }}>
+                                    <div style={{ width:'72px', height:'72px', borderRadius:'20px', background:'linear-gradient(135deg,#10B981,#059669)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'2rem', fontWeight:'900', color:'#fff', margin:'0 auto 24px', boxShadow:'0 8px 30px rgba(16,185,129,0.3)' }}>M</div>
+                                    <h1 style={{ fontFamily:"'Lora',serif", fontSize:'2rem', fontWeight:'700', color:'#0F172A', margin:'0 0 10px' }}>Welcome to MindCare</h1>
+                                    <p style={{ fontStyle:'italic', color:'#64748B', fontSize:'1rem', marginBottom:'6px' }}>"Your wellness journey starts here"</p>
+                                    <p style={{ color:'#94A3B8', fontSize:'0.84rem', marginBottom:'20px' }}>A safe, private space designed just for you.</p>
+                                    <div style={{ display:'inline-flex', alignItems:'center', gap:'8px', background:'#F1F5F9', padding:'8px 18px', borderRadius:'50px', fontSize:'0.82rem', color:'#475569', fontWeight:'600', marginBottom:'32px' }}>⏱ Takes about 5 minutes</div>
+                                    <br/>
+                                    <button style={{ padding:'14px 48px', borderRadius:'14px', border:'none', background:'linear-gradient(135deg,#10B981,#059669)', color:'#fff', fontSize:'1rem', fontWeight:'700', cursor:'pointer', boxShadow:'0 4px 20px rgba(16,185,129,0.3)', fontFamily:"'Inter',sans-serif" }} onClick={() => goToStep(1)}>Begin Your Session →</button>
+                                </div>
+                            ) : (
+                                <div style={{ background:'#fff', borderRadius:'28px', padding:'36px 40px', maxWidth:'780px', width:'100%', border:'1px solid #E2E8F0', boxShadow:'0 12px 40px rgba(15,23,42,0.04)' }}>
+
+                                    {/* STEPPER */}
+                                    <div style={{ background:'#0F172A', borderRadius:'16px', padding:'20px 24px', marginBottom:'32px', display:'flex', alignItems:'center', justifyContent:'space-between', position:'relative' }}>
+                                        <div style={{ position:'absolute', top:'30px', left:'60px', right:'60px', height:'2px', background:'#1E293B', zIndex:1 }}></div>
+                                        <div style={{ position:'absolute', top:'30px', left:'60px', width:`${stepFill}%`, maxWidth:'calc(100% - 120px)', height:'2px', background:'linear-gradient(90deg,#10B981,#34D399)', zIndex:2, transition:'width 0.5s ease', boxShadow:'0 0 8px rgba(16,185,129,0.4)' }}></div>
+                                        {FF_STEPS.map((s, i) => (
+                                            <div key={i} style={{ display:'flex', flexDirection:'column', alignItems:'center', zIndex:3 }}>
+                                                <div style={{ width:'38px', height:'38px', borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:'800', fontSize:'0.78rem', border: i < ffStep ? 'none' : i === ffStep-1 ? '2.5px solid #10B981' : '2px solid #334155', background: i < ffStep ? '#10B981' : i === ffStep-1 ? '#020617' : '#1E293B', color: i < ffStep ? '#fff' : i === ffStep-1 ? '#10B981' : '#64748B', transition:'all 0.4s ease', boxShadow: i === ffStep-1 ? '0 0 20px rgba(16,185,129,0.35)' : 'none' }}>
+                                                    {i < ffStep-1 ? '✓' : i+1}
+                                                </div>
+                                                <div style={{ marginTop:'8px', fontSize:'0.6rem', fontWeight: i===ffStep-1?'800':'600', color: i<ffStep?'#94A3B8': i===ffStep-1?'#10B981':'#475569', letterSpacing:'0.02em', textAlign:'center', maxWidth:'60px' }}>{['Profile','Mood','Habits','AI Chat','Assessment','Profile'][i]}</div>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {/* STEP CONTENT */}
+                                    <div style={{ opacity: ffStepVisible?1:0, transform: ffStepVisible?'translateX(0)':'translateX(30px)', transition:'all 0.3s ease', minHeight:'320px', display:'flex', flexDirection:'column' }}>
+                                        <div style={{ marginBottom:'20px' }}>
+                                            <span style={{ fontSize:'0.72rem', color:'#2563EB', fontWeight:'800', letterSpacing:'0.06em', textTransform:'uppercase' }}>{FF_STEPS[ffStep-1]?.tag}</span>
+                                            <h2 style={{ fontFamily:"'Lora',serif", fontSize:'1.3rem', color:'#0F172A', margin:'6px 0 4px', fontWeight:'600' }}>{FF_STEPS[ffStep-1]?.title}</h2>
+                                            <p style={{ fontSize:'0.82rem', color:'#64748B', margin:0 }}>{FF_STEPS[ffStep-1]?.desc}</p>
+                                        </div>
+
+                                        {/* STEP 1: Basic Profile */}
+                                        {ffStep === 1 && (
+                                            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'16px', flex:1 }}>
+                                                <div style={{ display:'flex', flexDirection:'column' }}>
+                                                    <label style={{ fontSize:'0.78rem', fontWeight:'600', color:'#475569', marginBottom:'6px' }}>Full Name</label>
+                                                    <input value={ffProfile.name} onChange={e=>setFfProfile(p=>({...p,name:e.target.value}))} placeholder="Your name" style={{ padding:'10px 14px', borderRadius:'10px', border:'1.5px solid #E2E8F0', outline:'none', fontSize:'0.85rem', fontFamily:"'Inter',sans-serif" }} />
+                                                </div>
+                                                <div style={{ display:'flex', flexDirection:'column' }}>
+                                                    <label style={{ fontSize:'0.78rem', fontWeight:'600', color:'#475569', marginBottom:'6px' }}>Age</label>
+                                                    <input value={ffProfile.age} onChange={e=>setFfProfile(p=>({...p,age:e.target.value}))} placeholder="e.g. 16" type="number" style={{ padding:'10px 14px', borderRadius:'10px', border:'1.5px solid #E2E8F0', outline:'none', fontSize:'0.85rem', fontFamily:"'Inter',sans-serif" }} />
+                                                </div>
+                                                <div style={{ display:'flex', flexDirection:'column' }}>
+                                                    <label style={{ fontSize:'0.78rem', fontWeight:'600', color:'#475569', marginBottom:'6px' }}>Gender</label>
+                                                    <select value={ffProfile.gender} onChange={e=>setFfProfile(p=>({...p,gender:e.target.value}))} style={{ padding:'10px 14px', borderRadius:'10px', border:'1.5px solid #E2E8F0', outline:'none', fontSize:'0.85rem', background:'#fff', fontFamily:"'Inter',sans-serif" }}>
+                                                        <option value="">Select</option>
+                                                        <option>Male</option><option>Female</option><option>Non-binary</option><option>Prefer not to say</option>
+                                                    </select>
+                                                </div>
+                                                <div style={{ display:'flex', flexDirection:'column' }}>
+                                                    <label style={{ fontSize:'0.78rem', fontWeight:'600', color:'#475569', marginBottom:'6px' }}>School / College</label>
+                                                    <input value={ffProfile.school} onChange={e=>setFfProfile(p=>({...p,school:e.target.value}))} placeholder="Your institution" style={{ padding:'10px 14px', borderRadius:'10px', border:'1.5px solid #E2E8F0', outline:'none', fontSize:'0.85rem', fontFamily:"'Inter',sans-serif" }} />
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {/* STEP 2: Mood Check */}
+                                        {ffStep === 2 && (
+                                            <div style={{ flex:1 }}>
+                                                <p style={{ fontSize:'0.85rem', color:'#64748B', marginBottom:'16px' }}>Select the emoji that best describes how you feel right now:</p>
+                                                <div style={{ display:'flex', flexWrap:'wrap', gap:'10px', marginBottom:'20px' }}>
+                                                    {MOODS.map(m => (
+                                                        <button key={m} onClick={()=>setFfMood(m)} style={{ padding:'10px 18px', borderRadius:'50px', border: ffMood===m?'2px solid #2563EB':'1.5px solid #E2E8F0', background: ffMood===m?'#2563EB':'#fff', color: ffMood===m?'#fff':'#64748B', fontSize:'0.88rem', fontWeight:'600', cursor:'pointer', fontFamily:"'Inter',sans-serif", transition:'all 0.2s' }}>{m}</button>
+                                                    ))}
+                                                </div>
+                                                <div style={{ background:'#F8FAFC', borderRadius:'12px', padding:'16px', border:'1px solid #E2E8F0' }}>
+                                                    <label style={{ fontSize:'0.78rem', fontWeight:'600', color:'#475569', display:'block', marginBottom:'8px' }}>Stress level today (1 = Low, 5 = High)</label>
+                                                    <div style={{ display:'flex', gap:'10px' }}>
+                                                        {[1,2,3,4,5].map(n => (
+                                                            <button key={n} onClick={()=>setFfStressLevel(n)} style={{ width:'40px', height:'40px', borderRadius:'50%', border: ffStressLevel===n?'2px solid #2563EB':'1.5px solid #E2E8F0', background: ffStressLevel===n?'#2563EB':'#fff', color: ffStressLevel===n?'#fff':'#475569', fontWeight:'700', cursor:'pointer', fontSize:'0.9rem' }}>{n}</button>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {/* STEP 3: Daily Habits */}
+                                        {ffStep === 3 && (
+                                            <div style={{ flex:1 }}>
+                                                <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'16px', marginBottom:'16px' }}>
+                                                    <div>
+                                                        <label style={{ fontSize:'0.78rem', fontWeight:'600', color:'#475569', display:'block', marginBottom:'6px' }}>Hours of sleep last night</label>
+                                                        <select value={ffSleepHours} onChange={e=>setFfSleepHours(e.target.value)} style={{ width:'100%', padding:'10px 14px', borderRadius:'10px', border:'1.5px solid #E2E8F0', outline:'none', fontSize:'0.85rem', background:'#fff', fontFamily:"'Inter',sans-serif" }}>
+                                                            <option value="">Select</option>
+                                                            {['Less than 4','4–5 hrs','6–7 hrs','8+ hrs'].map(o=><option key={o}>{o}</option>)}
+                                                        </select>
+                                                    </div>
+                                                    <div>
+                                                        <label style={{ fontSize:'0.78rem', fontWeight:'600', color:'#475569', display:'block', marginBottom:'6px' }}>Do you exercise regularly?</label>
+                                                        <select value={ffExercise} onChange={e=>setFfExercise(e.target.value)} style={{ width:'100%', padding:'10px 14px', borderRadius:'10px', border:'1.5px solid #E2E8F0', outline:'none', fontSize:'0.85rem', background:'#fff', fontFamily:"'Inter',sans-serif" }}>
+                                                            <option value="">Select</option>
+                                                            {['Daily','3–4x/week','1–2x/week','Rarely','Never'].map(o=><option key={o}>{o}</option>)}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <label style={{ fontSize:'0.78rem', fontWeight:'600', color:'#475569', display:'block', marginBottom:'8px' }}>Activities you enjoy (select all that apply)</label>
+                                                <div style={{ display:'flex', flexWrap:'wrap', gap:'8px' }}>
+                                                    {ACTIVITIES.map(a => (
+                                                        <button key={a} onClick={()=>setFfEnjoyActivities(prev=>prev.includes(a)?prev.filter(x=>x!==a):[...prev,a])} style={{ padding:'8px 16px', borderRadius:'50px', border: ffEnjoyActivities.includes(a)?'2px solid #2563EB':'1.5px solid #E2E8F0', background: ffEnjoyActivities.includes(a)?'#2563EB':'#fff', color: ffEnjoyActivities.includes(a)?'#fff':'#64748B', fontSize:'0.78rem', fontWeight:'600', cursor:'pointer', fontFamily:"'Inter',sans-serif", transition:'all 0.2s' }}>{a}</button>
                                                     ))}
                                                 </div>
                                             </div>
+                                        )}
 
-                                            <div className="form-group">
-                                                <label style={{ fontSize: '0.8rem' }}>Full Name</label>
-                                                <input 
-                                                    type="text" 
-                                                    placeholder="Alex Carter" 
-                                                    value={teenForm.fullName}
-                                                    onChange={(e) => setTeenForm(prev => ({ ...prev, fullName: e.target.value }))}
-                                                    style={{ padding: '8px 12px', fontSize: '0.9rem' }}
-                                                />
-                                            </div>
-
-                                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                                                <div className="form-group">
-                                                    <label style={{ fontSize: '0.8rem' }}>Age</label>
-                                                    <input 
-                                                        type="number" 
-                                                        placeholder="16" 
-                                                        value={teenForm.age}
-                                                        onChange={(e) => setTeenForm(prev => ({ ...prev, age: e.target.value }))}
-                                                        style={{ padding: '8px 12px', fontSize: '0.9rem' }}
-                                                    />
-                                                </div>
-                                                <div className="form-group">
-                                                    <label style={{ fontSize: '0.8rem' }}>Gender</label>
-                                                    <select 
-                                                        value={teenForm.gender} 
-                                                        onChange={(e) => setTeenForm(prev => ({ ...prev, gender: e.target.value }))}
-                                                        style={{ width: '100%', padding: '8px 12px', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-border)', fontSize: '0.9rem', color: 'var(--color-dark)', outline: 'none', height: '38px' }}
-                                                    >
-                                                        <option value="">Select</option>
-                                                        <option value="Male">Male</option>
-                                                        <option value="Female">Female</option>
-                                                        <option value="Non-binary">Non-binary</option>
-                                                        <option value="Prefer not to say">Prefer not to say</option>
-                                                    </select>
+                                        {/* STEP 4: AI Companion Chat */}
+                                        {ffStep === 4 && (
+                                            <div style={{ flex:1, display:'flex', flexDirection:'column' }}>
+                                                <div style={{ border:'1.5px solid #E2E8F0', borderRadius:'16px', background:'#F8FAFC', display:'flex', flexDirection:'column', height:'260px', overflow:'hidden' }}>
+                                                    <div style={{ flex:1, overflowY:'auto', padding:'16px', display:'flex', flexDirection:'column', gap:'12px' }}>
+                                                        {ffAiMessages.map((m, i) => (
+                                                            <div key={i} style={{ maxWidth:'80%', alignSelf: m.sender==='bot'?'flex-start':'flex-end', background: m.sender==='bot'?'#fff':'#2563EB', color: m.sender==='bot'?'#0F172A':'#fff', padding:'10px 14px', borderRadius: m.sender==='bot'?'4px 16px 16px 16px':'16px 4px 16px 16px', fontSize:'0.84rem', lineHeight:'1.5', border: m.sender==='bot'?'1px solid #E2E8F0':'none', boxShadow:'0 2px 8px rgba(0,0,0,0.04)' }}>{m.text}</div>
+                                                        ))}
+                                                    </div>
+                                                    <div style={{ padding:'12px 16px', borderTop:'1px solid #E2E8F0', display:'flex', gap:'8px' }}>
+                                                        <input value={ffAiInput} onChange={e=>setFfAiInput(e.target.value)} onKeyDown={e=>e.key==='Enter'&&handleFfAiSend()} placeholder="Type a message..." style={{ flex:1, padding:'8px 14px', borderRadius:'50px', border:'1.5px solid #E2E8F0', outline:'none', fontSize:'0.84rem', fontFamily:"'Inter',sans-serif" }} />
+                                                        <button onClick={handleFfAiSend} style={{ padding:'8px 18px', borderRadius:'50px', border:'none', background:'#2563EB', color:'#fff', fontWeight:'700', cursor:'pointer', fontSize:'0.84rem' }}>Send</button>
+                                                    </div>
                                                 </div>
                                             </div>
+                                        )}
 
-                                            <div className="form-group">
-                                                <label style={{ fontSize: '0.8rem' }}>Parent's Email (Optional)</label>
-                                                <input 
-                                                    type="email" 
-                                                    placeholder="parent@example.com" 
-                                                    value={teenForm.parentEmail}
-                                                    onChange={(e) => setTeenForm(prev => ({ ...prev, parentEmail: e.target.value }))}
-                                                    style={{ padding: '8px 12px', fontSize: '0.9rem' }}
-                                                />
-                                            </div>
-
-                                            <div className="form-group">
-                                                <label style={{ fontSize: '0.8rem' }}>Emergency Contact (Optional)</label>
-                                                <input 
-                                                    type="tel" 
-                                                    placeholder="+1 (555) 000-0000" 
-                                                    value={teenForm.emergencyContact}
-                                                    onChange={(e) => setTeenForm(prev => ({ ...prev, emergencyContact: e.target.value }))}
-                                                    style={{ padding: '8px 12px', fontSize: '0.9rem' }}
-                                                />
-                                            </div>
-
-                                            <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
-                                                <button className="btn btn-primary" style={{ flex: 1 }} onClick={handleTeenQuickFinish}>Finish &amp; Continue</button>
-                                                <button className="btn btn-secondary" style={{ flex: 1 }} onClick={() => navigateTo('portal-teen')}>Skip for Now</button>
-                                            </div>
-                                        </div>
-
-                                        {/* Privacy Assurance Card */}
-                                        <div style={{ background: 'var(--bg-alt)', borderRadius: 'var(--radius-md)', padding: '20px', border: '1px solid var(--color-border)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-                                                <span style={{ fontSize: '1.2rem' }}>🔒</span>
-                                                <h3 style={{ fontSize: '0.92rem', fontWeight: '700', color: 'var(--color-primary)', margin: 0 }}>Privacy Promise</h3>
-                                            </div>
-                                            <p style={{ fontSize: '0.78rem', color: 'var(--color-text)', lineHeight: '1.45', marginBottom: '14px' }}>
-                                                Your mental wellness space is secure. Parents can only view high-level wellness summaries and safety alert signals.
-                                            </p>
-                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                                                <div style={{ fontSize: '0.78rem', color: 'var(--color-text-light)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                                    <span style={{ color: '#EF4444' }}>❌</span> Private Journals
-                                                </div>
-                                                <div style={{ fontSize: '0.78rem', color: 'var(--color-text-light)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                                    <span style={{ color: '#EF4444' }}>❌</span> AI Journals &amp; Chats
-                                                </div>
-                                                <div style={{ fontSize: '0.78rem', color: 'var(--color-text-light)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                                    <span style={{ color: '#EF4444' }}>❌</span> Personal Notes &amp; Habits
+                                        {/* STEP 5: Wellness Assessment */}
+                                        {ffStep === 5 && (
+                                            <div style={{ flex:1 }}>
+                                                <p style={{ fontSize:'0.82rem', color:'#64748B', marginBottom:'16px' }}>Rate each statement: 0 = Not at all &nbsp; 1 = Several days &nbsp; 2 = More than half &nbsp; 3 = Nearly every day</p>
+                                                <div style={{ display:'flex', flexDirection:'column', gap:'14px' }}>
+                                                    {ASSESS_Q.map((q, qi) => (
+                                                        <div key={qi} style={{ background:'#F8FAFC', border:'1.5px solid #E2E8F0', borderRadius:'12px', padding:'14px 16px' }}>
+                                                            <p style={{ fontSize:'0.85rem', fontWeight:'600', color:'#0F172A', margin:'0 0 10px' }}>{q}</p>
+                                                            <div style={{ display:'flex', gap:'8px' }}>
+                                                                {[0,1,2,3].map(v => (
+                                                                    <button key={v} onClick={()=>setFfAssessAnswers(prev=>({...prev,[qi]:v}))} style={{ padding:'6px 14px', borderRadius:'50px', border: ffAssessAnswers[qi]===v?'2px solid #2563EB':'1.5px solid #E2E8F0', background: ffAssessAnswers[qi]===v?'#2563EB':'#fff', color: ffAssessAnswers[qi]===v?'#fff':'#64748B', fontSize:'0.78rem', fontWeight:'600', cursor:'pointer' }}>{v}</button>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    ))}
                                                 </div>
                                             </div>
-                                            <div style={{ borderTop: '1px solid var(--color-border)', marginTop: '16px', paddingTop: '12px', fontSize: '0.74rem', color: 'var(--color-text-light)' }}>
-                                                Therapists only see patients who explicitly book appointments or share wellness reports.
+                                        )}
+
+                                        {/* STEP 6: Review Profile */}
+                                        {ffStep === 6 && (
+                                            <div style={{ flex:1, display:'grid', gridTemplateColumns:'1fr 1fr', gap:'14px' }}>
+                                                {[
+                                                    { label:'Name', value: ffProfile.name || '—' },
+                                                    { label:'Age', value: ffProfile.age || '—' },
+                                                    { label:'Gender', value: ffProfile.gender || '—' },
+                                                    { label:'School', value: ffProfile.school || '—' },
+                                                    { label:'Mood Today', value: ffMood || '—' },
+                                                    { label:'Stress Level', value: ffStressLevel ? `${ffStressLevel}/5` : '—' },
+                                                    { label:'Sleep Hours', value: ffSleepHours || '—' },
+                                                    { label:'Exercise', value: ffExercise || '—' },
+                                                ].map(item => (
+                                                    <div key={item.label} style={{ background:'#F8FAFC', border:'1px solid #E2E8F0', borderRadius:'12px', padding:'12px 16px' }}>
+                                                        <div style={{ fontSize:'0.72rem', color:'#94A3B8', fontWeight:'700', textTransform:'uppercase', letterSpacing:'0.04em', marginBottom:'4px' }}>{item.label}</div>
+                                                        <div style={{ fontSize:'0.9rem', fontWeight:'700', color:'#0F172A' }}>{item.value}</div>
+                                                    </div>
+                                                ))}
                                             </div>
-                                        </div>
+                                        )}
                                     </div>
-                                )}
-                            </div>
-                        </div>
-                    </section>
-                )}
+
+                                    {/* NAV BUTTONS */}
+                                    <div style={{ display:'flex', justifyContent:'space-between', marginTop:'28px', paddingTop:'20px', borderTop:'1px solid #F1F5F9' }}>
+                                        <button onClick={() => goToStep(Math.max(1, ffStep-1))} style={{ padding:'10px 24px', borderRadius:'10px', border:'1.5px solid #E2E8F0', background:'#fff', color:'#475569', fontWeight:'600', cursor:'pointer', fontSize:'0.88rem' }} disabled={ffStep===1}>← Back</button>
+                                        {ffStep < 6 ? (
+                                            <button onClick={() => goToStep(ffStep+1)} style={{ padding:'10px 28px', borderRadius:'10px', border:'none', background:'linear-gradient(135deg,#2563EB,#1D4ED8)', color:'#fff', fontWeight:'700', cursor:'pointer', fontSize:'0.88rem' }}>Continue →</button>
+                                        ) : (
+                                            <button onClick={handleCompleteSession} style={{ padding:'10px 28px', borderRadius:'10px', border:'none', background:'linear-gradient(135deg,#10B981,#059669)', color:'#fff', fontWeight:'700', cursor:'pointer', fontSize:'0.88rem', boxShadow:'0 4px 16px rgba(16,185,129,0.3)' }}>Generate My Wellness Profile ✓</button>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+                        </section>
+                    );
+                })()}
+
+
+
 
                 {/* ================= ONBOARDING: PARENT ================= */}
                 {currentView === 'onboarding-parent' && (
