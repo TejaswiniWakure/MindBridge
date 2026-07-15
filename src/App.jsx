@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import TeenDashboard from './TeenDashboard';
 import ParentDashboard from './ParentDashboard';
-import { Brain, Mic, Activity, BarChart2, Users, ShieldCheck, Sparkles, BadgeCheck, HeartHandshake, Check, UserRound } from 'lucide-react';
+import { Brain, Mic, Activity, BarChart2, Users, ShieldCheck, Sparkles, BadgeCheck, HeartHandshake, Check, UserRound, Heart, Smile, Leaf, Stars, MessageCircleHeart, MessageCircle, ClipboardCheck, ArrowRight, User, Moon, Monitor, Droplets, BookOpen, Send, Camera, Copy } from 'lucide-react';
 
 
 
@@ -61,13 +61,11 @@ export default function App() {
     });
     const [ffStep, setFfStep] = useState(0); // 0=welcome, 1-6=steps, 7=profile complete
     const [ffStepVisible, setFfStepVisible] = useState(true);
-    const [ffProfile, setFfProfile] = useState({ name: '', age: '', gender: '', school: '' });
-    const [ffMood, setFfMood] = useState('');
-    const [ffSleepHours, setFfSleepHours] = useState('');
-    const [ffStressLevel, setFfStressLevel] = useState('');
-    const [ffSocialComfort, setFfSocialComfort] = useState('');
-    const [ffExercise, setFfExercise] = useState('');
-    const [ffEnjoyActivities, setFfEnjoyActivities] = useState([]);
+    const [ffProfile, setFfProfile] = useState({ name: '', age: '', gender: '', school: '', grade: '', height: '', weight: '', guardianName: '', guardianPhone: '', language: '' });
+    const [ffLifestyle, setFfLifestyle] = useState({ sleep: '', screenTime: '', exercise: '', water: '', study: '', outdoor: '', hobby: '' });
+    const [ffAiThinking, setFfAiThinking] = useState(false);
+    const [ffEmotionScan, setFfEmotionScan] = useState('idle'); // idle, scanning, done
+    const [ffAssessmentStep, setFfAssessmentStep] = useState(0);
     const [ffAiMessages, setFfAiMessages] = useState([
         { sender: 'bot', text: "Hi! I'm your MindCare AI Companion. Tell me how you're feeling today and I'll be here to support you! 💙" }
     ]);
@@ -1295,78 +1293,67 @@ export default function App() {
 
                 {/* ================= VIEW: SELECT WORKSPACE ================= */}
                 {currentView === 'role' && (
-                    <section className="app-view section-container">
-                        <div className="section-header text-center">
-                            <span className="section-tag" style={{ background: '#EFF6FF', color: '#2563EB', padding: '4px 14px', borderRadius: '50px', fontSize: '0.7rem', fontWeight: '800', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '8px', display: 'inline-block' }}>⚡ FEELFREE WORKSPACES</span>
-                            <h2 className="section-title">Select Your Workspace</h2>
-                            <p className="section-subtitle">Select the portal that best matches your role to continue securely.</p>
-                        </div>
-
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '28px', maxWidth: '760px', margin: '0 auto' }}>
-
-                            {/* Child Portal Card */}
-                            <div className="role-card-premium" style={{ background: '#FFFFFF', padding: '32px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', height: '100%' }}>
-                                <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: '#EFF6FF', color: '#2563EB', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px' }}>
-                                    <Brain size={28} />
-                                </div>
-                                <h3 style={{ fontSize: '1.25rem', fontWeight: '800', color: '#0F172A', marginBottom: '12px' }}>My Wellness Space</h3>
-                                <p style={{ fontSize: '0.85rem', color: '#64748B', lineHeight: '1.6', marginBottom: '32px', flexGrow: 1 }}>
-                                    Access your personalized wellness journey.
-                                </p>
-                                <div style={{ width: '100%' }}>
-                                    {createdRoles.includes('teen') ? (
-                                        <button className="btn btn-primary" style={{ width: '100%', borderRadius: '12px', background: 'linear-gradient(135deg, #1D4ED8 0%, #3B82F6 100%)', border: 'none', color: '#FFFFFF' }} onClick={() => { setActiveRole('teen'); navigateTo('portal-teen'); }}>Continue →</button>
-                                    ) : (
-                                        <button className="btn btn-primary" style={{ width: '100%', borderRadius: '12px', background: 'linear-gradient(135deg, #1D4ED8 0%, #3B82F6 100%)', border: 'none', color: '#FFFFFF' }} onClick={() => {
-                                            setActiveRole('teen');
-                                            if (sessionCompleted) { navigateTo('portal-teen'); }
-                                            else { setFfStep(0); setFfStepVisible(true); navigateTo('onboarding-teen'); }
-                                        }}>Continue →</button>
-                                    )}
-                                </div>
+                    <div className="portal-select-wrapper">
+                        <div className="portal-select-inner">
+                            <div className="portal-select-tag">
+                                <Sparkles size={14} />
+                                Let's Get Started
                             </div>
+                            <h1 className="portal-select-title">Choose Your Portal</h1>
+                            <p className="portal-select-subtitle">Unlock a personalized wellness experience built just for you. Choose the portal that matches your role.</p>
+                            <div className="portal-cards-grid">
 
-                            {/* Parent Portal Card */}
-                            <div className="role-card-premium" style={{ background: '#FFFFFF', padding: '32px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', height: '100%' }}>
-                                <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: '#F0FDF4', color: '#059669', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px' }}>
-                                    <ShieldCheck size={28} />
+                                {/* Child Portal Card */}
+                                <div className="portal-card" onClick={() => {
+                                    setActiveRole('teen');
+                                    if (sessionCompleted) { navigateTo('portal-teen'); }
+                                    else { setFfStep(0); setFfStepVisible(true); navigateTo('onboarding-teen'); }
+                                }}>
+                                    <div className="portal-card-icon blue"><Brain size={30} strokeWidth={2} /></div>
+                                    <div className="portal-card-label">Child Portal</div>
+                                    <h2 className="portal-card-title">My Wellness Space</h2>
+                                    <p className="portal-card-desc">Begin your personalized wellness journey with guided conversations, emotional check-ins, evidence-based assessments, and a secure wellness profile designed to help you grow every day.</p>
+                                    <button className="portal-card-btn">
+                                        <span>Start Journey</span>
+                                        <ArrowRight size={18} />
+                                    </button>
                                 </div>
-                                <h3 style={{ fontSize: '1.25rem', fontWeight: '800', color: '#0F172A', marginBottom: '12px' }}>Family Dashboard</h3>
-                                <p style={{ fontSize: '0.85rem', color: '#64748B', lineHeight: '1.6', marginBottom: '32px', flexGrow: 1 }}>
-                                    Monitor your child's wellness progress.
-                                </p>
-                                <div style={{ width: '100%' }}>
-                                    {createdRoles.includes('parent') ? (
-                                        <button className="btn btn-primary" style={{ width: '100%', borderRadius: '12px', background: 'linear-gradient(135deg, #1D4ED8 0%, #3B82F6 100%)', border: 'none', color: '#FFFFFF' }} onClick={() => { setActiveRole('parent'); navigateTo('portal-parent'); }}>Continue →</button>
-                                    ) : (
-                                        <button className="btn btn-primary" style={{ width: '100%', borderRadius: '12px', background: 'linear-gradient(135deg, #1D4ED8 0%, #3B82F6 100%)', border: 'none', color: '#FFFFFF' }} onClick={() => { setActiveRole('parent'); navigateTo('portal-parent'); }}>Continue →</button>
-                                    )}
+
+                                {/* Parent Portal Card */}
+                                <div className="portal-card" onClick={() => { setActiveRole('parent'); navigateTo('portal-parent'); }}>
+                                    <div className="portal-card-icon green"><ShieldCheck size={30} strokeWidth={2} /></div>
+                                    <div className="portal-card-label">Parent Portal</div>
+                                    <h2 className="portal-card-title">Family Dashboard</h2>
+                                    <p className="portal-card-desc">Stay connected with your child's wellness through secure progress summaries, personalized insights, assessment reports, and privacy-first family support.</p>
+                                    <button className="portal-card-btn" style={{ background: 'linear-gradient(135deg, #059669 0%, #10B981 100%)' }}>
+                                        <span>Access Dashboard</span>
+                                        <ArrowRight size={18} />
+                                    </button>
                                 </div>
+
                             </div>
-
                         </div>
-                    </section>
+                    </div>
                 )}
-
 
                 {/* ================= ONBOARDING: TEEN ================= */}
                 {currentView === 'onboarding-teen' && (() => {
                     const FF_STEPS = [
-                        { tag: 'STEP 1 OF 6', title: 'Your Basic Profile', desc: 'Help us personalise your journey.' },
-                        { tag: 'STEP 2 OF 6', title: 'How Are You Feeling?', desc: 'Share your current emotional state.' },
-                        { tag: 'STEP 3 OF 6', title: 'Daily Habits & Lifestyle', desc: 'Tell us about your daily routine.' },
-                        { tag: 'STEP 4 OF 6', title: 'AI Companion Chat', desc: 'Have a short conversation with your MindCare companion.' },
-                        { tag: 'STEP 5 OF 6', title: 'Wellness Assessment', desc: 'Answer a quick mental wellness check.' },
-                        { tag: 'STEP 6 OF 6', title: 'Your Wellness Profile', desc: 'Review your personalised profile.' },
+                        { tag: 'STEP 1 OF 6', title: "Let's Get to Know You", desc: 'Tell us a little about yourself so we can personalise your wellness journey.' },
+                        { tag: 'STEP 2 OF 6', title: 'Lifestyle & Daily Habits', desc: 'Share your daily routines to help us understand your wellbeing.' },
+                        { tag: 'STEP 3 OF 6', title: 'AI Companion Chat', desc: 'Have a warm conversation with your personal MindCare companion.' },
+                        { tag: 'STEP 4 OF 6', title: 'Emotion & Mood Analysis', desc: 'Let us understand how you feel through optional tools.' },
+                        { tag: 'STEP 5 OF 6', title: 'Wellness Assessment', desc: 'Answer a quick clinically-based mental wellness check, one question at a time.' },
+                        { tag: 'STEP 6 OF 6', title: 'Your Wellness Profile', desc: 'See your personalised wellness summary and recommendations.' },
                     ];
-                    const MOODS = ['😊 Happy','😌 Calm','😴 Tired','😰 Anxious','😢 Sad','😡 Frustrated'];
-                    const ACTIVITIES = ['Reading','Music','Sports','Art','Gaming','Cooking','Nature walks','Journaling'];
                     const ASSESS_Q = [
-                        'Feeling nervous, anxious, or on edge?',
-                        'Not being able to stop worrying?',
-                        'Feeling down, depressed, or hopeless?',
-                        'Trouble falling or staying asleep?',
-                        'Feeling tired or having little energy?'
+                        { q: 'Feeling nervous, anxious, or on edge?', scale: ['Not at all', 'Several days', 'More than half the days', 'Nearly every day'] },
+                        { q: 'Not being able to stop or control worrying?', scale: ['Not at all', 'Several days', 'More than half the days', 'Nearly every day'] },
+                        { q: 'Feeling down, depressed, or hopeless?', scale: ['Not at all', 'Several days', 'More than half the days', 'Nearly every day'] },
+                        { q: 'Trouble falling or staying asleep, or sleeping too much?', scale: ['Not at all', 'Several days', 'More than half the days', 'Nearly every day'] },
+                        { q: 'Feeling tired or having little energy?', scale: ['Not at all', 'Several days', 'More than half the days', 'Nearly every day'] },
+                        { q: 'Feeling bad about yourself or that you are a failure?', scale: ['Not at all', 'Several days', 'More than half the days', 'Nearly every day'] },
+                        { q: 'Trouble concentrating on things, such as reading or watching TV?', scale: ['Not at all', 'Several days', 'More than half the days', 'Nearly every day'] },
                     ];
 
                     const goToStep = (next) => {
@@ -1379,19 +1366,25 @@ export default function App() {
                         const userMsg = { sender: 'user', text: ffAiInput };
                         setFfAiMessages(prev => [...prev, userMsg]);
                         setFfAiInput('');
+                        setFfAiThinking(true);
                         setTimeout(() => {
                             const replies = [
                                 "That's really helpful to know! 💙 Remember, your feelings are completely valid.",
                                 "Thank you for sharing that with me. I'm always here to listen and support you! 🌿",
                                 "I hear you. Let's work together on your wellness journey step by step. 🌟",
+                                "You're doing great by being here. Every step forward matters. 🌈",
+                                "It takes courage to talk about how we feel. I'm proud of you! 💪",
                             ];
+                            setFfAiThinking(false);
                             setFfAiMessages(prev => [...prev, { sender: 'bot', text: replies[Math.floor(Math.random()*replies.length)] }]);
-                        }, 900);
+                        }, 1400);
                     };
 
                     const handleCompleteSession = () => {
-                        const score = Math.round(70 + (Object.values(ffAssessAnswers).reduce((a,b)=>a+b,0) / 15) * -20 + Math.random()*10);
-                        const clamped = Math.max(40, Math.min(95, score));
+                        const totalScore = Object.values(ffAssessAnswers).reduce((a,b)=>a+b,0);
+                        const maxScore = ASSESS_Q.length * 3;
+                        const score = Math.round(95 - (totalScore / maxScore) * 50 + Math.random() * 5);
+                        const clamped = Math.max(40, Math.min(98, score));
                         setFfWellnessScore(clamped);
                         const date = new Date().toLocaleDateString('en-IN', { day:'numeric', month:'long', year:'numeric' });
                         setFfCompletedDate(date);
@@ -1400,57 +1393,195 @@ export default function App() {
                         goToStep(7);
                     };
 
+                    const famCode = [ffProfile.name?.slice(0,2) || 'MC', Math.floor(1000 + Math.random()*9000), 'WL'].join('-').toUpperCase();
+
                     const stepFill = ffStep === 0 ? 0 : Math.round(((ffStep) / 6) * 100);
 
-                    // STEP 7: Session Complete card
-                    if (ffStep === 7) return (
-                        <section style={{ minHeight:'100vh', background:'linear-gradient(135deg,#F8FAFC,#EFF6FF)', display:'flex', alignItems:'center', justifyContent:'center', padding:'40px 24px', fontFamily:"'Inter',sans-serif" }}>
-                            <div style={{ background:'#fff', borderRadius:'28px', padding:'48px 40px', maxWidth:'520px', width:'100%', border:'1px solid #E2E8F0', boxShadow:'0 12px 40px rgba(15,23,42,0.06)', textAlign:'center' }}>
-                                <div style={{ width:'72px', height:'72px', borderRadius:'50%', background:'linear-gradient(135deg,#10B981,#059669)', display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 20px', fontSize:'2rem' }}>✓</div>
-                                <span style={{ display:'inline-block', background:'#F0FDF4', color:'#16A34A', fontSize:'0.72rem', fontWeight:'800', padding:'4px 14px', borderRadius:'50px', letterSpacing:'0.05em', textTransform:'uppercase', marginBottom:'12px' }}>SESSION COMPLETED</span>
-                                <h2 style={{ fontFamily:"'Lora',serif", fontSize:'1.8rem', fontWeight:'700', color:'#0F172A', margin:'0 0 8px' }}>Your Wellness Profile is Ready!</h2>
-                                <p style={{ fontSize:'0.88rem', color:'#64748B', marginBottom:'28px', lineHeight:'1.6' }}>Completed on {ffCompletedDate}. Your personalised MindCare dashboard is now active.</p>
-                                <div style={{ background:'#F8FAFC', border:'1px solid #E2E8F0', borderRadius:'16px', padding:'20px', marginBottom:'28px' }}>
-                                    <div style={{ fontSize:'0.75rem', color:'#64748B', fontWeight:'700', marginBottom:'4px', textTransform:'uppercase', letterSpacing:'0.05em' }}>Overall Wellness Score</div>
-                                    <div style={{ fontSize:'3.5rem', fontWeight:'900', color: ffWellnessScore >= 70 ? '#10B981' : ffWellnessScore >= 50 ? '#F59E0B' : '#EF4444', lineHeight:1 }}>{ffWellnessScore}<span style={{ fontSize:'1.2rem', color:'#94A3B8' }}>/100</span></div>
-                                    <div style={{ fontSize:'0.8rem', color:'#64748B', marginTop:'6px' }}>{ffWellnessScore >= 70 ? '🌟 Good — Keep going!' : ffWellnessScore >= 50 ? '💛 Fair — Let us improve together' : '💙 Needs attention — We are here for you'}</div>
-                                </div>
-                                <div style={{ display:'flex', gap:'12px' }}>
-                                    <button className="btn btn-primary" style={{ flex:1 }} onClick={() => navigateTo('portal-teen')}>Go to Dashboard →</button>
-                                    <button className="btn btn-secondary" style={{ flex:1 }} onClick={() => { goToStep(5); }}>Start Reassessment</button>
-                                </div>
-                            </div>
-                        </section>
-                    );
+                    // STEP 7: Comprehensive Wellness Profile
+                    if (ffStep === 7) {
+                        const scoreColor = ffWellnessScore >= 70 ? '#10B981' : ffWellnessScore >= 50 ? '#F59E0B' : '#EF4444';
+                        const scoreLabel = ffWellnessScore >= 70 ? 'Good' : ffWellnessScore >= 50 ? 'Fair' : 'Needs Support';
+                        const strengths = ['Self-awareness', 'Willingness to grow', 'Seeking help proactively'];
+                        const focusAreas = ffWellnessScore < 60 ? ['Stress management', 'Sleep hygiene', 'Emotional regulation'] : ['Maintain consistency', 'Social connection', 'Mindfulness practice'];
+                        const recommendations = ffWellnessScore >= 70
+                            ? ['Continue daily mood check-ins', 'Try the 5-minute breathing exercise', 'Share a journal entry this week']
+                            : ['Start with a 5-min guided meditation', 'Talk to your AI companion daily', 'Schedule a parent or counsellor chat'];
+                        return (
+                            <div className="child-onboarding-bg" style={{ padding: '48px 24px', alignItems: 'flex-start', overflowY: 'auto' }}>
+                                <div className="wellness-profile-card">
+                                    {/* Header */}
+                                    <div style={{ textAlign: 'center', marginBottom: '36px' }}>
+                                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#F0FDF4', color: '#16A34A', fontSize: '0.75rem', fontWeight: '800', padding: '6px 16px', borderRadius: '50px', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '16px' }}>
+                                            <Sparkles size={14} /> SESSION COMPLETED
+                                        </div>
+                                        <h1 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '2.2rem', fontWeight: '800', color: '#0F172A', margin: '0 0 10px', letterSpacing: '-0.03em' }}>Your Wellness Profile is Ready!</h1>
+                                        <p style={{ fontSize: '1rem', color: '#64748B', lineHeight: '1.6' }}>Completed on {ffCompletedDate}. Your personalised MindCare dashboard is now active.</p>
+                                    </div>
 
-                    return (
-                        <section style={{ minHeight:'100vh', background:'linear-gradient(135deg,#F8FAFC 0%,#EFF6FF 50%,#F0FDF4 100%)', display:'flex', alignItems:'center', justifyContent:'center', padding:'40px 24px', fontFamily:"'Inter',sans-serif" }}>
-                            {/* WELCOME SCREEN */}
-                            {ffStep === 0 ? (
-                                <div style={{ background:'#fff', borderRadius:'28px', padding:'56px 44px', maxWidth:'560px', width:'100%', border:'1px solid #E2E8F0', boxShadow:'0 12px 40px rgba(15,23,42,0.05)', textAlign:'center' }}>
-                                    <div style={{ width:'72px', height:'72px', borderRadius:'20px', background:'linear-gradient(135deg,#10B981,#059669)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'2rem', fontWeight:'900', color:'#fff', margin:'0 auto 24px', boxShadow:'0 8px 30px rgba(16,185,129,0.3)' }}>M</div>
-                                    <h1 style={{ fontFamily:"'Lora',serif", fontSize:'2rem', fontWeight:'700', color:'#0F172A', margin:'0 0 10px' }}>Welcome to MindCare</h1>
-                                    <p style={{ fontStyle:'italic', color:'#64748B', fontSize:'1rem', marginBottom:'6px' }}>"Your wellness journey starts here"</p>
-                                    <p style={{ color:'#94A3B8', fontSize:'0.84rem', marginBottom:'20px' }}>A safe, private space designed just for you.</p>
-                                    <div style={{ display:'inline-flex', alignItems:'center', gap:'8px', background:'#F1F5F9', padding:'8px 18px', borderRadius:'50px', fontSize:'0.82rem', color:'#475569', fontWeight:'600', marginBottom:'32px' }}>⏱ Takes about 5 minutes</div>
-                                    <br/>
-                                    <button style={{ padding:'14px 48px', borderRadius:'14px', border:'none', background:'linear-gradient(135deg,#10B981,#059669)', color:'#fff', fontSize:'1rem', fontWeight:'700', cursor:'pointer', boxShadow:'0 4px 20px rgba(16,185,129,0.3)', fontFamily:"'Inter',sans-serif" }} onClick={() => goToStep(1)}>Begin Your Session →</button>
-                                </div>
-                            ) : (
-                                <div style={{ background:'#fff', borderRadius:'28px', padding:'36px 40px', maxWidth:'780px', width:'100%', border:'1px solid #E2E8F0', boxShadow:'0 12px 40px rgba(15,23,42,0.04)' }}>
+                                    {/* Score Ring + Info Row */}
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '24px', marginBottom: '32px', alignItems: 'center' }}>
+                                        <div style={{ textAlign: 'center' }}>
+                                            <div className="wellness-score-ring" style={{ borderColor: scoreColor }}>
+                                                <div style={{ fontSize: '2.8rem', fontWeight: '900', color: scoreColor, lineHeight: 1 }}>{ffWellnessScore}</div>
+                                                <div style={{ fontSize: '0.75rem', color: '#94A3B8', fontWeight: '600' }}>/100</div>
+                                            </div>
+                                            <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '1rem', fontWeight: '700', color: scoreColor }}>{scoreLabel}</div>
+                                            <div style={{ fontSize: '0.8rem', color: '#94A3B8', marginTop: '4px' }}>Overall Wellness Score</div>
+                                        </div>
+                                        <div className="wellness-info-row" style={{ marginBottom: 0 }}>
+                                            <div className="wellness-info-item">
+                                                <div className="wi-label">Name</div>
+                                                <div className="wi-value">{ffProfile.name || '—'}</div>
+                                            </div>
+                                            <div className="wellness-info-item">
+                                                <div className="wi-label">Age</div>
+                                                <div className="wi-value">{ffProfile.age || '—'}</div>
+                                            </div>
+                                            <div className="wellness-info-item">
+                                                <div className="wi-label">School</div>
+                                                <div className="wi-value">{ffProfile.school || '—'}</div>
+                                            </div>
+                                            <div className="wellness-info-item">
+                                                <div className="wi-label">Grade</div>
+                                                <div className="wi-value">{ffProfile.grade || '—'}</div>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                    {/* STEPPER */}
-                                    <div style={{ background:'#0F172A', borderRadius:'16px', padding:'20px 24px', marginBottom:'32px', display:'flex', alignItems:'center', justifyContent:'space-between', position:'relative' }}>
-                                        <div style={{ position:'absolute', top:'30px', left:'60px', right:'60px', height:'2px', background:'#1E293B', zIndex:1 }}></div>
-                                        <div style={{ position:'absolute', top:'30px', left:'60px', width:`${stepFill}%`, maxWidth:'calc(100% - 120px)', height:'2px', background:'linear-gradient(90deg,#10B981,#34D399)', zIndex:2, transition:'width 0.5s ease', boxShadow:'0 0 8px rgba(16,185,129,0.4)' }}></div>
-                                        {FF_STEPS.map((s, i) => (
-                                            <div key={i} style={{ display:'flex', flexDirection:'column', alignItems:'center', zIndex:3 }}>
-                                                <div style={{ width:'38px', height:'38px', borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:'800', fontSize:'0.78rem', border: i < ffStep ? 'none' : i === ffStep-1 ? '2.5px solid #10B981' : '2px solid #334155', background: i < ffStep ? '#10B981' : i === ffStep-1 ? '#020617' : '#1E293B', color: i < ffStep ? '#fff' : i === ffStep-1 ? '#10B981' : '#64748B', transition:'all 0.4s ease', boxShadow: i === ffStep-1 ? '0 0 20px rgba(16,185,129,0.35)' : 'none' }}>
-                                                    {i < ffStep-1 ? '✓' : i+1}
-                                                </div>
-                                                <div style={{ marginTop:'8px', fontSize:'0.6rem', fontWeight: i===ffStep-1?'800':'600', color: i<ffStep?'#94A3B8': i===ffStep-1?'#10B981':'#475569', letterSpacing:'0.02em', textAlign:'center', maxWidth:'60px' }}>{['Profile','Mood','Habits','AI Chat','Assessment','Profile'][i]}</div>
+                                    {/* Strengths + Focus Areas */}
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '28px', textAlign: 'left' }}>
+                                        <div style={{ background: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: '16px', padding: '20px' }}>
+                                            <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: '700', color: '#15803D', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}><span>💪</span> Strengths</div>
+                                            {strengths.map(s => <div key={s} style={{ fontSize: '0.875rem', color: '#166534', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '8px' }}><span style={{ color: '#22C55E' }}>✓</span>{s}</div>)}
+                                        </div>
+                                        <div style={{ background: '#FFF7ED', border: '1px solid #FED7AA', borderRadius: '16px', padding: '20px' }}>
+                                            <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: '700', color: '#C2410C', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}><span>🎯</span> Focus Areas</div>
+                                            {focusAreas.map(f => <div key={f} style={{ fontSize: '0.875rem', color: '#9A3412', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '8px' }}><span style={{ color: '#F97316' }}>→</span>{f}</div>)}
+                                        </div>
+                                    </div>
+
+                                    {/* Recommendations */}
+                                    <div style={{ background: '#EFF6FF', border: '1px solid #BFDBFE', borderRadius: '16px', padding: '20px', marginBottom: '28px', textAlign: 'left' }}>
+                                        <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: '700', color: '#1D4ED8', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}><Sparkles size={16} /> Personalised Recommendations</div>
+                                        {recommendations.map((r, i) => (
+                                            <div key={i} style={{ fontSize: '0.875rem', color: '#1E40AF', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                                <span style={{ width: '24px', height: '24px', borderRadius: '50%', background: '#DBEAFE', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: '0.75rem', fontWeight: '800', color: '#2563EB' }}>{i+1}</span>
+                                                {r}
                                             </div>
                                         ))}
+                                    </div>
+
+                                    {/* Family Code */}
+                                    <div className="family-code-box">
+                                        <div>
+                                            <div style={{ fontSize: '0.75rem', color: '#1D4ED8', fontWeight: '700', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Your Family Code</div>
+                                            <div className="fc-code">{famCode}</div>
+                                        </div>
+                                        <button className="family-code-copy-btn" onClick={() => navigator.clipboard.writeText(famCode)}><Copy size={14} /> Copy</button>
+                                    </div>
+
+                                    {/* Action Buttons */}
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                                        <button className="child-next-btn" style={{ justifyContent: 'center', padding: '14px 24px', fontSize: '1rem', borderRadius: '14px' }} onClick={() => navigateTo('portal-teen')}>
+                                            Go to Dashboard <ArrowRight size={18} />
+                                        </button>
+                                        <button className="child-back-btn" style={{ fontSize: '1rem', padding: '14px', borderRadius: '14px' }} onClick={() => { setFfAssessmentStep(0); goToStep(5); }}>
+                                            🔄 Start Reassessment
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    }
+
+                    return (
+                        <div className="child-onboarding-bg">
+                            {/* WELCOME SCREEN */}
+                            {ffStep === 0 ? (
+                                <>
+                                    {/* Floating Background Icons */}
+                                    <Heart className="floating-bg-icon" size={48} style={{ top: '10%', left: '10%', animationDuration: '22s' }} />
+                                    <Brain className="floating-bg-icon" size={64} style={{ top: '20%', right: '15%', animationDuration: '25s', animationDelay: '2s' }} />
+                                    <Sparkles className="floating-bg-icon" size={40} style={{ bottom: '15%', left: '20%', animationDuration: '18s', animationDelay: '4s' }} />
+                                    <ShieldCheck className="floating-bg-icon" size={56} style={{ bottom: '25%', right: '10%', animationDuration: '24s', animationDelay: '1s' }} />
+                                    <Smile className="floating-bg-icon" size={50} style={{ top: '50%', left: '5%', animationDuration: '20s', animationDelay: '5s' }} />
+                                    <Leaf className="floating-bg-icon" size={44} style={{ top: '40%', right: '8%', animationDuration: '19s', animationDelay: '3s' }} />
+                                    <Stars className="floating-bg-icon" size={60} style={{ bottom: '10%', right: '35%', animationDuration: '26s', animationDelay: '7s' }} />
+                                    <Activity className="floating-bg-icon" size={45} style={{ top: '15%', left: '40%', animationDuration: '21s', animationDelay: '2s' }} />
+                                    <HeartHandshake className="floating-bg-icon" size={55} style={{ top: '65%', left: '15%', animationDuration: '23s', animationDelay: '6s' }} />
+                                    <MessageCircleHeart className="floating-bg-icon" size={50} style={{ top: '75%', right: '20%', animationDuration: '18s', animationDelay: '8s' }} />
+                                    
+                                    <div className="child-welcome-card" style={{ maxWidth: '700px' }}>
+                                        <div style={{ width:'80px', height:'80px', borderRadius:'24px', background:'rgba(255, 255, 255, 0.7)', border: '1px solid rgba(255, 255, 255, 0.9)', backdropFilter: 'blur(10px)', display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 28px', boxShadow:'0 12px 40px rgba(15,23,42,0.06)' }}>
+                                            <div style={{ width:'56px', height:'56px', borderRadius:'16px', background:'linear-gradient(135deg, #1D4ED8, #06B6D4)', display:'flex', alignItems:'center', justifyContent:'center', boxShadow:'0 8px 24px rgba(37,99,235,0.3)' }}>
+                                                <svg width="30" height="30" viewBox="0 0 24 24" fill="white"><path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"/></svg>
+                                            </div>
+                                        </div>
+                                        <h1 style={{ fontFamily:"'Plus Jakarta Sans',sans-serif", fontSize:'3rem', fontWeight:'800', color:'#0F172A', margin:'0 0 16px', letterSpacing:'-0.03em', lineHeight:1.15 }}>Welcome to Your<br/>Personalized Wellness Journey</h1>
+                                        <p style={{ color:'#0F172A', fontSize:'1.1rem', fontWeight:'600', marginBottom:'12px', fontFamily:"'Inter',sans-serif" }}>We're glad you're here.</p>
+                                        <p style={{ color:'#64748B', fontSize:'1.05rem', marginBottom:'36px', maxWidth:'600px', margin:'0 auto 36px', lineHeight:'1.8', fontFamily:"'Inter',sans-serif" }}>This one-time guided session helps us understand your emotions, lifestyle, and well-being so we can create a personalized wellness experience designed specifically for you.</p>
+                                        
+                                        <div style={{ display:'flex', flexDirection:'column', gap:'12px', background:'rgba(255, 255, 255, 0.6)', backdropFilter:'blur(10px)', border:'1px solid rgba(59, 130, 246, 0.2)', borderRadius:'20px', padding:'24px 28px', marginBottom:'40px', textAlign:'left', boxShadow:'0 8px 32px rgba(15,23,42,0.03)', maxWidth:'480px', margin:'0 auto 40px' }}>
+                                            <div style={{ display:'flex', alignItems:'center', gap:'10px', fontSize:'0.9rem', color:'#334155', fontWeight:'600' }}>
+                                                <span style={{ fontSize:'1.1rem' }}>⏳</span> Takes approximately 5-7 minutes
+                                            </div>
+                                            <div style={{ display:'flex', alignItems:'center', gap:'10px', fontSize:'0.9rem', color:'#334155' }}>
+                                                <Check size={18} color="#10B981" /> Completely Secure
+                                            </div>
+                                            <div style={{ display:'flex', alignItems:'center', gap:'10px', fontSize:'0.9rem', color:'#334155' }}>
+                                                <Check size={18} color="#10B981" /> Your responses remain private
+                                            </div>
+                                            <div style={{ display:'flex', alignItems:'center', gap:'10px', fontSize:'0.9rem', color:'#334155' }}>
+                                                <Check size={18} color="#10B981" /> Personalized recommendations
+                                            </div>
+                                            <div style={{ display:'flex', alignItems:'center', gap:'10px', fontSize:'0.9rem', color:'#334155' }}>
+                                                <Check size={18} color="#10B981" /> You can reassess anytime from your dashboard
+                                            </div>
+                                        </div>
+                                        
+                                        <button className="portal-card-btn" style={{ width:'260px', padding:'16px 28px', borderRadius:'50px', background:'linear-gradient(135deg, #1D4ED8, #06B6D4)' }} onClick={() => goToStep(1)}>
+                                            <span>Begin My Wellness Journey</span>
+                                            <ArrowRight size={18} />
+                                        </button>
+                                        <p style={{ marginTop: '16px', fontSize: '0.75rem', color: '#94A3B8', fontWeight: '500', display:'flex', alignItems:'center', justifyContent:'center', gap:'6px' }}>
+                                            <ShieldCheck size={14} /> Your information is protected and securely encrypted.
+                                        </p>
+                                    </div>
+                                </>
+                            ) : (
+                                <div className="child-onboarding-card">
+
+                                    {/* PREMIUM STEPPER */}
+                                    <div className="child-stepper">
+                                        <div className="child-stepper-line"></div>
+                                        <div className="child-stepper-fill" style={{ width: `${stepFill}%` }}></div>
+                                        {[
+                                            { icon: <User size={22} />, label: 'Profile' },
+                                            { icon: <Activity size={22} />, label: 'Lifestyle' },
+                                            { icon: <MessageCircle size={22} />, label: 'Companion' },
+                                            { icon: <Brain size={22} />, label: 'Emotions' },
+                                            { icon: <ClipboardCheck size={22} />, label: 'Assessment' },
+                                            { icon: <Sparkles size={22} />, label: 'Wellness' }
+                                        ].map((step, i) => {
+                                            const isDone = i < ffStep - 1;
+                                            const isActive = i === ffStep - 1;
+                                            let circleClass = 'child-step-circle';
+                                            if (isDone) circleClass += ' done';
+                                            else if (isActive) circleClass += ' active';
+                                            
+                                            let labelClass = 'child-step-label';
+                                            if (isDone) labelClass += ' done';
+                                            else if (isActive) labelClass += ' active';
+
+                                            return (
+                                                <div key={i} className="child-step-node">
+                                                    <div className={circleClass}>
+                                                        {isDone ? <Check size={20} strokeWidth={3} /> : step.icon}
+                                                    </div>
+                                                    <div className={labelClass}>{step.label}</div>
+                                                </div>
+                                            );
+                                        })}
                                     </div>
 
                                     {/* STEP CONTENT */}
@@ -1463,105 +1594,76 @@ export default function App() {
 
                                         {/* STEP 1: Basic Profile */}
                                         {ffStep === 1 && (
-                                            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'16px', flex:1 }}>
-                                                <div style={{ display:'flex', flexDirection:'column' }}>
-                                                    <label style={{ fontSize:'0.78rem', fontWeight:'600', color:'#475569', marginBottom:'6px' }}>Full Name</label>
-                                                    <input value={ffProfile.name} onChange={e=>setFfProfile(p=>({...p,name:e.target.value}))} placeholder="Your name" style={{ padding:'10px 14px', borderRadius:'10px', border:'1.5px solid #E2E8F0', outline:'none', fontSize:'0.85rem', fontFamily:"'Inter',sans-serif" }} />
+                                            <div className="child-form-grid">
+                                                <div className="child-form-group">
+                                                    <label>Full Name *</label>
+                                                    <input className="child-input" value={ffProfile.name} onChange={e=>setFfProfile(p=>({...p,name:e.target.value}))} placeholder="Your name" />
                                                 </div>
-                                                <div style={{ display:'flex', flexDirection:'column' }}>
-                                                    <label style={{ fontSize:'0.78rem', fontWeight:'600', color:'#475569', marginBottom:'6px' }}>Age</label>
-                                                    <input value={ffProfile.age} onChange={e=>setFfProfile(p=>({...p,age:e.target.value}))} placeholder="e.g. 16" type="number" style={{ padding:'10px 14px', borderRadius:'10px', border:'1.5px solid #E2E8F0', outline:'none', fontSize:'0.85rem', fontFamily:"'Inter',sans-serif" }} />
+                                                <div className="child-form-group">
+                                                    <label>Age *</label>
+                                                    <input className="child-input" value={ffProfile.age} onChange={e=>setFfProfile(p=>({...p,age:e.target.value}))} placeholder="e.g. 15" type="number" />
                                                 </div>
-                                                <div style={{ display:'flex', flexDirection:'column' }}>
-                                                    <label style={{ fontSize:'0.78rem', fontWeight:'600', color:'#475569', marginBottom:'6px' }}>Gender</label>
-                                                    <select value={ffProfile.gender} onChange={e=>setFfProfile(p=>({...p,gender:e.target.value}))} style={{ padding:'10px 14px', borderRadius:'10px', border:'1.5px solid #E2E8F0', outline:'none', fontSize:'0.85rem', background:'#fff', fontFamily:"'Inter',sans-serif" }}>
+                                                <div className="child-form-group">
+                                                    <label>Gender</label>
+                                                    <select className="child-select" value={ffProfile.gender} onChange={e=>setFfProfile(p=>({...p,gender:e.target.value}))}>
                                                         <option value="">Select</option>
                                                         <option>Male</option><option>Female</option><option>Non-binary</option><option>Prefer not to say</option>
                                                     </select>
                                                 </div>
-                                                <div style={{ display:'flex', flexDirection:'column' }}>
-                                                    <label style={{ fontSize:'0.78rem', fontWeight:'600', color:'#475569', marginBottom:'6px' }}>School / College</label>
-                                                    <input value={ffProfile.school} onChange={e=>setFfProfile(p=>({...p,school:e.target.value}))} placeholder="Your institution" style={{ padding:'10px 14px', borderRadius:'10px', border:'1.5px solid #E2E8F0', outline:'none', fontSize:'0.85rem', fontFamily:"'Inter',sans-serif" }} />
+                                                <div className="child-form-group">
+                                                    <label>School / College Name *</label>
+                                                    <input className="child-input" value={ffProfile.school} onChange={e=>setFfProfile(p=>({...p,school:e.target.value}))} placeholder="Your institution" />
+                                                </div>
+                                                <div className="child-form-group">
+                                                    <label>Grade / Class *</label>
+                                                    <input className="child-input" value={ffProfile.grade} onChange={e=>setFfProfile(p=>({...p,grade:e.target.value}))} placeholder="e.g. 10th Grade" />
+                                                </div>
+                                                <div className="child-form-group" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                                                    <div style={{ display:'flex', flexDirection:'column', gap:'6px' }}>
+                                                        <label>Height (cm)</label>
+                                                        <input className="child-input" value={ffProfile.height} onChange={e=>setFfProfile(p=>({...p,height:e.target.value}))} placeholder="e.g. 165" type="number" />
+                                                    </div>
+                                                    <div style={{ display:'flex', flexDirection:'column', gap:'6px' }}>
+                                                        <label>Weight (kg)</label>
+                                                        <input className="child-input" value={ffProfile.weight} onChange={e=>setFfProfile(p=>({...p,weight:e.target.value}))} placeholder="e.g. 55" type="number" />
+                                                    </div>
+                                                </div>
+                                                <div className="child-form-group">
+                                                    <label>Parent / Guardian Name *</label>
+                                                    <input className="child-input" value={ffProfile.guardianName} onChange={e=>setFfProfile(p=>({...p,guardianName:e.target.value}))} placeholder="Guardian's name" />
+                                                </div>
+                                                <div className="child-form-group">
+                                                    <label>Parent / Guardian Mobile *</label>
+                                                    <input className="child-input" value={ffProfile.guardianPhone} onChange={e=>setFfProfile(p=>({...p,guardianPhone:e.target.value}))} placeholder="Mobile number" type="tel" />
+                                                </div>
+                                                <div className="child-form-group">
+                                                    <label>Preferred Language</label>
+                                                    <select className="child-select" value={ffProfile.language} onChange={e=>setFfProfile(p=>({...p,language:e.target.value}))}>
+                                                        <option value="">Select Language</option>
+                                                        <option>English</option><option>Spanish</option><option>French</option><option>Hindi</option><option>Other</option>
+                                                    </select>
                                                 </div>
                                             </div>
                                         )}
 
-                                        {/* STEP 2: Mood Check */}
+                                        {/* STEP 2: Lifestyle & Daily Habits */}
                                         {ffStep === 2 && (
                                             <div style={{ flex:1 }}>
-                                                <p style={{ fontSize:'0.85rem', color:'#64748B', marginBottom:'16px' }}>Select the emoji that best describes how you feel right now:</p>
-                                                <div style={{ display:'flex', flexWrap:'wrap', gap:'10px', marginBottom:'20px' }}>
-                                                    {MOODS.map(m => (
-                                                        <button key={m} onClick={()=>setFfMood(m)} style={{ padding:'10px 18px', borderRadius:'50px', border: ffMood===m?'2px solid #2563EB':'1.5px solid #E2E8F0', background: ffMood===m?'#2563EB':'#fff', color: ffMood===m?'#fff':'#64748B', fontSize:'0.88rem', fontWeight:'600', cursor:'pointer', fontFamily:"'Inter',sans-serif", transition:'all 0.2s' }}>{m}</button>
-                                                    ))}
-                                                </div>
-                                                <div style={{ background:'#F8FAFC', borderRadius:'12px', padding:'16px', border:'1px solid #E2E8F0' }}>
-                                                    <label style={{ fontSize:'0.78rem', fontWeight:'600', color:'#475569', display:'block', marginBottom:'8px' }}>Stress level today (1 = Low, 5 = High)</label>
-                                                    <div style={{ display:'flex', gap:'10px' }}>
-                                                        {[1,2,3,4,5].map(n => (
-                                                            <button key={n} onClick={()=>setFfStressLevel(n)} style={{ width:'40px', height:'40px', borderRadius:'50%', border: ffStressLevel===n?'2px solid #2563EB':'1.5px solid #E2E8F0', background: ffStressLevel===n?'#2563EB':'#fff', color: ffStressLevel===n?'#fff':'#475569', fontWeight:'700', cursor:'pointer', fontSize:'0.9rem' }}>{n}</button>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )}
-
-                                        {/* STEP 3: Daily Habits */}
-                                        {ffStep === 3 && (
-                                            <div style={{ flex:1 }}>
-                                                <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'16px', marginBottom:'16px' }}>
-                                                    <div>
-                                                        <label style={{ fontSize:'0.78rem', fontWeight:'600', color:'#475569', display:'block', marginBottom:'6px' }}>Hours of sleep last night</label>
-                                                        <select value={ffSleepHours} onChange={e=>setFfSleepHours(e.target.value)} style={{ width:'100%', padding:'10px 14px', borderRadius:'10px', border:'1.5px solid #E2E8F0', outline:'none', fontSize:'0.85rem', background:'#fff', fontFamily:"'Inter',sans-serif" }}>
-                                                            <option value="">Select</option>
-                                                            {['Less than 4','4–5 hrs','6–7 hrs','8+ hrs'].map(o=><option key={o}>{o}</option>)}
-                                                        </select>
-                                                    </div>
-                                                    <div>
-                                                        <label style={{ fontSize:'0.78rem', fontWeight:'600', color:'#475569', display:'block', marginBottom:'6px' }}>Do you exercise regularly?</label>
-                                                        <select value={ffExercise} onChange={e=>setFfExercise(e.target.value)} style={{ width:'100%', padding:'10px 14px', borderRadius:'10px', border:'1.5px solid #E2E8F0', outline:'none', fontSize:'0.85rem', background:'#fff', fontFamily:"'Inter',sans-serif" }}>
-                                                            <option value="">Select</option>
-                                                            {['Daily','3–4x/week','1–2x/week','Rarely','Never'].map(o=><option key={o}>{o}</option>)}
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <label style={{ fontSize:'0.78rem', fontWeight:'600', color:'#475569', display:'block', marginBottom:'8px' }}>Activities you enjoy (select all that apply)</label>
-                                                <div style={{ display:'flex', flexWrap:'wrap', gap:'8px' }}>
-                                                    {ACTIVITIES.map(a => (
-                                                        <button key={a} onClick={()=>setFfEnjoyActivities(prev=>prev.includes(a)?prev.filter(x=>x!==a):[...prev,a])} style={{ padding:'8px 16px', borderRadius:'50px', border: ffEnjoyActivities.includes(a)?'2px solid #2563EB':'1.5px solid #E2E8F0', background: ffEnjoyActivities.includes(a)?'#2563EB':'#fff', color: ffEnjoyActivities.includes(a)?'#fff':'#64748B', fontSize:'0.78rem', fontWeight:'600', cursor:'pointer', fontFamily:"'Inter',sans-serif", transition:'all 0.2s' }}>{a}</button>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        )}
-
-                                        {/* STEP 4: AI Companion Chat */}
-                                        {ffStep === 4 && (
-                                            <div style={{ flex:1, display:'flex', flexDirection:'column' }}>
-                                                <div style={{ border:'1.5px solid #E2E8F0', borderRadius:'16px', background:'#F8FAFC', display:'flex', flexDirection:'column', height:'260px', overflow:'hidden' }}>
-                                                    <div style={{ flex:1, overflowY:'auto', padding:'16px', display:'flex', flexDirection:'column', gap:'12px' }}>
-                                                        {ffAiMessages.map((m, i) => (
-                                                            <div key={i} style={{ maxWidth:'80%', alignSelf: m.sender==='bot'?'flex-start':'flex-end', background: m.sender==='bot'?'#fff':'#2563EB', color: m.sender==='bot'?'#0F172A':'#fff', padding:'10px 14px', borderRadius: m.sender==='bot'?'4px 16px 16px 16px':'16px 4px 16px 16px', fontSize:'0.84rem', lineHeight:'1.5', border: m.sender==='bot'?'1px solid #E2E8F0':'none', boxShadow:'0 2px 8px rgba(0,0,0,0.04)' }}>{m.text}</div>
-                                                        ))}
-                                                    </div>
-                                                    <div style={{ padding:'12px 16px', borderTop:'1px solid #E2E8F0', display:'flex', gap:'8px' }}>
-                                                        <input value={ffAiInput} onChange={e=>setFfAiInput(e.target.value)} onKeyDown={e=>e.key==='Enter'&&handleFfAiSend()} placeholder="Type a message..." style={{ flex:1, padding:'8px 14px', borderRadius:'50px', border:'1.5px solid #E2E8F0', outline:'none', fontSize:'0.84rem', fontFamily:"'Inter',sans-serif" }} />
-                                                        <button onClick={handleFfAiSend} style={{ padding:'8px 18px', borderRadius:'50px', border:'none', background:'#2563EB', color:'#fff', fontWeight:'700', cursor:'pointer', fontSize:'0.84rem' }}>Send</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )}
-
-                                        {/* STEP 5: Wellness Assessment */}
-                                        {ffStep === 5 && (
-                                            <div style={{ flex:1 }}>
-                                                <p style={{ fontSize:'0.82rem', color:'#64748B', marginBottom:'16px' }}>Rate each statement: 0 = Not at all &nbsp; 1 = Several days &nbsp; 2 = More than half &nbsp; 3 = Nearly every day</p>
-                                                <div style={{ display:'flex', flexDirection:'column', gap:'14px' }}>
-                                                    {ASSESS_Q.map((q, qi) => (
-                                                        <div key={qi} style={{ background:'#F8FAFC', border:'1.5px solid #E2E8F0', borderRadius:'12px', padding:'14px 16px' }}>
-                                                            <p style={{ fontSize:'0.85rem', fontWeight:'600', color:'#0F172A', margin:'0 0 10px' }}>{q}</p>
-                                                            <div style={{ display:'flex', gap:'8px' }}>
-                                                                {[0,1,2,3].map(v => (
-                                                                    <button key={v} onClick={()=>setFfAssessAnswers(prev=>({...prev,[qi]:v}))} style={{ padding:'6px 14px', borderRadius:'50px', border: ffAssessAnswers[qi]===v?'2px solid #2563EB':'1.5px solid #E2E8F0', background: ffAssessAnswers[qi]===v?'#2563EB':'#fff', color: ffAssessAnswers[qi]===v?'#fff':'#64748B', fontSize:'0.78rem', fontWeight:'600', cursor:'pointer' }}>{v}</button>
+                                                <div className="lifestyle-grid">
+                                                    {[
+                                                        { key: 'sleep', icon: <Moon size={22} />, title: 'Average Sleep', options: ['< 4 hrs', '4–5 hrs', '6–7 hrs', '8+ hrs'] },
+                                                        { key: 'screenTime', icon: <Monitor size={22} />, title: 'Daily Screen Time', options: ['< 1 hr', '1–3 hrs', '3–5 hrs', '5+ hrs'] },
+                                                        { key: 'exercise', icon: <Activity size={22} />, title: 'Exercise Frequency', options: ['Daily', '3–4x/week', '1–2x/week', 'Rarely'] },
+                                                        { key: 'water', icon: <Droplets size={22} />, title: 'Water Intake', options: ['< 1L', '1–2L', '2–3L', '3L+'] },
+                                                        { key: 'study', icon: <BookOpen size={22} />, title: 'Daily Study Hours', options: ['< 1 hr', '1–3 hrs', '3–5 hrs', '5+ hrs'] },
+                                                        { key: 'outdoor', icon: <Leaf size={22} />, title: 'Outdoor Activities', options: ['Daily', 'Weekly', 'Monthly', 'Rarely'] },
+                                                        { key: 'hobby', icon: <Smile size={22} />, title: 'Favourite Hobby', options: ['Music', 'Sports', 'Reading', 'Art & Craft'] },
+                                                    ].map(({ key, icon, title, options }) => (
+                                                        <div key={key}>
+                                                            <div style={{ fontSize: '0.78rem', fontWeight: '700', color: '#475569', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>{icon}{title}</div>
+                                                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                                                                {options.map(opt => (
+                                                                    <button key={opt} onClick={() => setFfLifestyle(prev => ({...prev, [key]: opt}))} style={{ padding: '7px 14px', borderRadius: '50px', fontSize: '0.8rem', fontWeight: '600', cursor: 'pointer', fontFamily: "'Inter',sans-serif", transition: 'all 0.2s', border: ffLifestyle[key] === opt ? '2px solid #2563EB' : '1.5px solid #E2E8F0', background: ffLifestyle[key] === opt ? '#EFF6FF' : '#FFFFFF', color: ffLifestyle[key] === opt ? '#1D4ED8' : '#64748B' }}>{opt}</button>
                                                                 ))}
                                                             </div>
                                                         </div>
@@ -1570,40 +1672,139 @@ export default function App() {
                                             </div>
                                         )}
 
-                                        {/* STEP 6: Review Profile */}
-                                        {ffStep === 6 && (
-                                            <div style={{ flex:1, display:'grid', gridTemplateColumns:'1fr 1fr', gap:'14px' }}>
-                                                {[
-                                                    { label:'Name', value: ffProfile.name || '—' },
-                                                    { label:'Age', value: ffProfile.age || '—' },
-                                                    { label:'Gender', value: ffProfile.gender || '—' },
-                                                    { label:'School', value: ffProfile.school || '—' },
-                                                    { label:'Mood Today', value: ffMood || '—' },
-                                                    { label:'Stress Level', value: ffStressLevel ? `${ffStressLevel}/5` : '—' },
-                                                    { label:'Sleep Hours', value: ffSleepHours || '—' },
-                                                    { label:'Exercise', value: ffExercise || '—' },
-                                                ].map(item => (
-                                                    <div key={item.label} style={{ background:'#F8FAFC', border:'1px solid #E2E8F0', borderRadius:'12px', padding:'12px 16px' }}>
-                                                        <div style={{ fontSize:'0.72rem', color:'#94A3B8', fontWeight:'700', textTransform:'uppercase', letterSpacing:'0.04em', marginBottom:'4px' }}>{item.label}</div>
-                                                        <div style={{ fontSize:'0.9rem', fontWeight:'700', color:'#0F172A' }}>{item.value}</div>
+                                        {/* STEP 3: AI Companion Chat */}
+                                        {ffStep === 3 && (
+                                            <div style={{ flex:1, display:'flex', flexDirection:'column' }}>
+                                                <div className="ai-chat-container">
+                                                    <div className="ai-chat-messages" id="aiChatScrollArea">
+                                                        {ffAiMessages.map((m, i) => (
+                                                            <div key={i} className={`ai-chat-msg ${m.sender}`}>{m.text}</div>
+                                                        ))}
+                                                        {ffAiThinking && (
+                                                            <div className="ai-typing-indicator">
+                                                                <div className="ai-typing-dot"></div>
+                                                                <div className="ai-typing-dot"></div>
+                                                                <div className="ai-typing-dot"></div>
+                                                            </div>
+                                                        )}
                                                     </div>
-                                                ))}
+                                                    <div className="ai-chat-input-area">
+                                                        <div className="ai-chat-input-wrapper">
+                                                            <input className="ai-chat-input" value={ffAiInput} onChange={e=>setFfAiInput(e.target.value)} onKeyDown={e=>e.key==='Enter'&&handleFfAiSend()} placeholder="Share how you're feeling..." />
+                                                            <button className="ai-chat-mic-btn" title="Voice input"><Mic size={16} /></button>
+                                                        </div>
+                                                        <button className="ai-chat-send-btn" onClick={handleFfAiSend}><Send size={18} /></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {/* STEP 4: Emotion Analysis */}
+                                        {ffStep === 4 && (
+                                            <div style={{ flex:1 }}>
+                                                <div className="emotion-analysis-box">
+                                                    <div className="emotion-scan-circle">
+                                                        <Smile size={44} strokeWidth={1.5} />
+                                                    </div>
+                                                    <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '1.3rem', fontWeight: '700', color: '#0F172A', margin: '0 0 8px' }}>Emotion & Behaviour Analysis</h3>
+                                                    <p style={{ fontSize: '0.9rem', color: '#64748B', marginBottom: '28px', maxWidth: '420px', lineHeight: '1.6' }}>Optionally use your camera or microphone to analyse your emotional state. This data is processed securely and never stored.</p>
+                                                    <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '20px' }}>
+                                                        <button onClick={() => setFfEmotionScan('scanning')} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 24px', borderRadius: '12px', border: '1.5px solid #E2E8F0', background: '#FFFFFF', color: '#0F172A', fontWeight: '600', cursor: 'pointer', fontFamily: "'Inter',sans-serif", fontSize: '0.9rem' }}>
+                                                            <Camera size={18} style={{ color: '#2563EB' }} /> Use Camera
+                                                        </button>
+                                                        <button style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 24px', borderRadius: '12px', border: '1.5px solid #E2E8F0', background: '#FFFFFF', color: '#0F172A', fontWeight: '600', cursor: 'pointer', fontFamily: "'Inter',sans-serif", fontSize: '0.9rem' }}>
+                                                            <Mic size={18} style={{ color: '#7C3AED' }} /> Use Voice
+                                                        </button>
+                                                    </div>
+                                                    {ffEmotionScan === 'scanning' && <div style={{ fontSize: '0.85rem', color: '#2563EB', fontWeight: '600', animation: 'fadeIn 0.4s ease' }}>📸 Analysing your expression... (demo)</div>}
+                                                    <button onClick={() => goToStep(5)} style={{ background: 'none', border: 'none', color: '#94A3B8', fontSize: '0.85rem', cursor: 'pointer', fontFamily: "'Inter',sans-serif", marginTop: '12px', textDecoration: 'underline' }}>Skip this step →</button>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {/* STEP 5: Wellness Assessment — one question at a time */}
+                                        {ffStep === 5 && (
+                                            <div style={{ flex:1 }}>
+                                                {/* Progress within assessment */}
+                                                <div className="assessment-progress-bar">
+                                                    <div className="assessment-progress-fill" style={{ width: `${((ffAssessmentStep + 1) / ASSESS_Q.length) * 100}%` }}></div>
+                                                </div>
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: '#94A3B8', marginBottom: '24px', fontWeight: '600' }}>
+                                                    <span>Question {ffAssessmentStep + 1} of {ASSESS_Q.length}</span>
+                                                    <span>{ASSESS_Q[ffAssessmentStep]?.scale?.[0] ? 'GAD-7 / PHQ-9 Scale' : ''}</span>
+                                                </div>
+                                                <div className="assessment-wizard-card">
+                                                    <p style={{ fontSize: '0.75rem', fontWeight: '700', color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '16px' }}>How often have you been bothered by...</p>
+                                                    <div className="assessment-question">{ASSESS_Q[ffAssessmentStep]?.q}</div>
+                                                    <div className="assessment-options">
+                                                        {ASSESS_Q[ffAssessmentStep]?.scale?.map((label, v) => (
+                                                            <button key={v} className="assessment-option-btn" style={{ border: ffAssessAnswers[ffAssessmentStep] === v ? '2px solid #3B82F6' : '1.5px solid #E2E8F0', background: ffAssessAnswers[ffAssessmentStep] === v ? '#EFF6FF' : '#FFFFFF', color: ffAssessAnswers[ffAssessmentStep] === v ? '#1D4ED8' : '#475569' }} onClick={() => {
+                                                                setFfAssessAnswers(prev => ({ ...prev, [ffAssessmentStep]: v }));
+                                                                setTimeout(() => {
+                                                                    if (ffAssessmentStep < ASSESS_Q.length - 1) setFfAssessmentStep(s => s + 1);
+                                                                }, 350);
+                                                            }}>
+                                                                <span>{label}</span>
+                                                                {ffAssessAnswers[ffAssessmentStep] === v && <Check size={18} strokeWidth={3} style={{ color: '#2563EB' }} />}
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                                {ffAssessmentStep > 0 && (
+                                                    <button onClick={() => setFfAssessmentStep(s => s - 1)} style={{ marginTop: '16px', background: 'none', border: 'none', color: '#94A3B8', fontSize: '0.85rem', cursor: 'pointer', fontFamily: "'Inter',sans-serif" }}>← Previous question</button>
+                                                )}
+                                            </div>
+                                        )}
+
+                                        {/* STEP 6: Preview before generating profile */}
+                                        {ffStep === 6 && (
+                                            <div style={{ flex:1 }}>
+                                                <div style={{ background: '#EFF6FF', border: '1px solid #BFDBFE', borderRadius: '16px', padding: '24px', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+                                                    <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'linear-gradient(135deg, #2563EB, #3B82F6)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><Sparkles size={26} color="#fff" /></div>
+                                                    <div>
+                                                        <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: '700', fontSize: '1.1rem', color: '#1E40AF', marginBottom: '4px' }}>Almost there, {ffProfile.name || 'Superstar'}! 🎉</div>
+                                                        <div style={{ fontSize: '0.875rem', color: '#3B82F6', lineHeight: '1.5' }}>We have gathered everything we need to generate your personalised Wellness Profile. Click the button below to reveal your score, strengths, and recommendations.</div>
+                                                    </div>
+                                                </div>
+                                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                                                    {[
+                                                        { label: 'Name', value: ffProfile.name || '—' },
+                                                        { label: 'Age', value: ffProfile.age || '—' },
+                                                        { label: 'School', value: ffProfile.school || '—' },
+                                                        { label: 'Grade', value: ffProfile.grade || '—' },
+                                                        { label: 'Sleep', value: ffLifestyle.sleep || '—' },
+                                                        { label: 'Exercise', value: ffLifestyle.exercise || '—' },
+                                                        { label: 'Screen Time', value: ffLifestyle.screenTime || '—' },
+                                                        { label: 'Assessment', value: `${Object.keys(ffAssessAnswers).length} / ${ASSESS_Q.length} answered` },
+                                                    ].map(item => (
+                                                        <div key={item.label} className="wellness-info-item">
+                                                            <div className="wi-label">{item.label}</div>
+                                                            <div className="wi-value">{item.value}</div>
+                                                        </div>
+                                                    ))}
+                                                </div>
                                             </div>
                                         )}
                                     </div>
 
                                     {/* NAV BUTTONS */}
-                                    <div style={{ display:'flex', justifyContent:'space-between', marginTop:'28px', paddingTop:'20px', borderTop:'1px solid #F1F5F9' }}>
-                                        <button onClick={() => goToStep(Math.max(1, ffStep-1))} style={{ padding:'10px 24px', borderRadius:'10px', border:'1.5px solid #E2E8F0', background:'#fff', color:'#475569', fontWeight:'600', cursor:'pointer', fontSize:'0.88rem' }} disabled={ffStep===1}>← Back</button>
+                                    <div className="child-nav-row">
+                                        <button className="child-back-btn" onClick={() => goToStep(Math.max(1, ffStep-1))} disabled={ffStep===1}>← Back</button>
                                         {ffStep < 6 ? (
-                                            <button onClick={() => goToStep(ffStep+1)} style={{ padding:'10px 28px', borderRadius:'10px', border:'none', background:'linear-gradient(135deg,#2563EB,#1D4ED8)', color:'#fff', fontWeight:'700', cursor:'pointer', fontSize:'0.88rem' }}>Continue →</button>
+                                            <button className="child-next-btn" onClick={() => {
+                                                if (ffStep === 5 && ffAssessmentStep < ASSESS_Q.length - 1) {
+                                                    setFfAssessmentStep(s => s + 1);
+                                                } else {
+                                                    goToStep(ffStep + 1);
+                                                }
+                                            }}>Continue <ArrowRight size={16} /></button>
                                         ) : (
-                                            <button onClick={handleCompleteSession} style={{ padding:'10px 28px', borderRadius:'10px', border:'none', background:'linear-gradient(135deg,#10B981,#059669)', color:'#fff', fontWeight:'700', cursor:'pointer', fontSize:'0.88rem', boxShadow:'0 4px 16px rgba(16,185,129,0.3)' }}>Generate My Wellness Profile ✓</button>
+                                            <button className="child-finish-btn" onClick={handleCompleteSession}><Sparkles size={16} /> Generate My Wellness Profile</button>
                                         )}
                                     </div>
                                 </div>
                             )}
-                        </section>
+                        </div>
                     );
                 })()}
 
@@ -1940,37 +2141,58 @@ export default function App() {
             </main>
 
             {/* Footer — only on public pages */}
-            {['home','features','about','faqs','contact'].includes(currentView) ? (
-            <footer className="footer">
-                <div className="footer-container">
-                    <div className="footer-brand-section">
-                        <div className="footer-logo">
-                            <img src="/logo.jpg" alt="MindBridge Logo" style={{ width: '26px', height: '26px', borderRadius: '4px', objectFit: 'contain', marginRight: '6px' }} />
-                            <span>MindBridge</span>
+            {['home','features','about','faqs','contact'].includes(currentView) && (
+            <footer className="footer-premium">
+                <div className="footer-premium-inner">
+                    <div className="footer-brand-col">
+                        <div className="footer-logo-wrap">
+                            <div className="logo-box">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"/></svg>
+                            </div>
+                            <span className="brand-name">MindCare</span>
                         </div>
-                        <p className="footer-tagline">AI-powered wellness insights and clinical safety nets designed for family growth.</p>
+                        <p className="brand-desc">Building Brighter Minds Through Compassion. MindCare combines intelligent guidance, personalized insights, and clinically inspired wellness tools to support children&apos;s emotional growth.</p>
                     </div>
-                    <div className="footer-links-grid">
-                        <div className="footer-group">
-                            <h4 className="group-title">Company</h4>
-                            <ul className="group-list">
-                                <li><button onClick={() => navigateTo('about')} className="footer-link">About Us</button></li>
-                                <li><button className="footer-link">Careers</button></li>
-                            </ul>
-                        </div>
-                        <div className="footer-group">
-                            <h4 className="group-title">Resources</h4>
-                            <ul className="group-list">
-                                <li><button onClick={() => navigateTo('faqs')} className="footer-link">FAQs</button></li>
-                            </ul>
-                        </div>
+
+                    <div>
+                        <div className="footer-col-title">Explore</div>
+                        <ul className="footer-nav-list">
+                            <li><button onClick={() => { navigateTo('home'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>Home</button></li>
+                            <li><button onClick={() => scrollToSection('section-features')}>Features</button></li>
+                            <li><button onClick={() => scrollToSection('section-how-it-works')}>How It Works</button></li>
+                            <li><button onClick={() => scrollToSection('section-about')}>About</button></li>
+                            <li><button onClick={() => scrollToSection('section-therapist')}>Therapist</button></li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <div className="footer-col-title">Platform</div>
+                        <ul className="footer-nav-list">
+                            <li><button onClick={() => navigateTo('role')}>Child Portal</button></li>
+                            <li><button onClick={() => navigateTo('role')}>Parent Portal</button></li>
+                            <li><span>AI Companion</span></li>
+                            <li><span>Wellness Hub</span></li>
+                            <li><span>Assessment</span></li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <div className="footer-col-title">Legal</div>
+                        <ul className="footer-nav-list">
+                            <li><span>Privacy Policy</span></li>
+                            <li><span>Terms &amp; Conditions</span></li>
+                            <li><button onClick={() => navigateTo('faqs')}>FAQs</button></li>
+                            <li><span>Cookies Policy</span></li>
+                        </ul>
                     </div>
                 </div>
-                <div className="footer-bottom">
-                    <p>&copy; 2026 MindBridge. All rights reserved. Designed with clinical care.</p>
+
+                <div className="footer-bottom-bar">
+                    <p>&copy; 2026 MindCare. All Rights Reserved.</p>
+                    <p>Built with <span className="heart">&#10084;&#65039;</span> for Children&apos;s Mental Wellness.</p>
                 </div>
             </footer>
-            ) : null}
+            )}
 
 
             {/* Modal Detail Viewer overlay */}
