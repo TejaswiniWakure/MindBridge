@@ -1,0 +1,1 @@
+const express = require('express'); const router = express.Router(); const c = require('../controllers/bookingController'); router.post('/', c.create); router.get('/', c.getAll); router.put('/:id/cancel', c.cancel); router.put('/:id/complete', c.complete); module.exports = router;

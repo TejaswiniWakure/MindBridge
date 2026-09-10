@@ -1,0 +1,1 @@
+const express = require('express'); const router = express.Router(); const c = require('../controllers/messageController'); router.get('/conversations', c.getConversations); router.get('/:conversationId', c.getMessages); router.post('/', c.sendMessage); router.put('/:id/read', c.markRead); module.exports = router;

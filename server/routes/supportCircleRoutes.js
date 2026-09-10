@@ -1,0 +1,1 @@
+const express = require('express'); const router = express.Router(); const c = require('../controllers/supportCircleController'); router.get('/', c.getCircle); router.post('/members', c.addMember); router.put('/members/:memberId', c.updateMember); router.delete('/members/:memberId', c.removeMember); router.post('/invite/:token', c.acceptInvite); module.exports = router;

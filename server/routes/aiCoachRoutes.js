@@ -1,0 +1,1 @@
+const express = require('express'); const router = express.Router(); const c = require('../controllers/aiCoachController'); router.post('/chat', c.chat); router.get('/sessions', c.getSessions); router.get('/sessions/:id', c.getSession); router.post('/sessions', c.createSession); module.exports = router;

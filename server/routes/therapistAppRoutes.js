@@ -1,0 +1,1 @@
+const express = require('express'); const router = express.Router(); const c = require('../controllers/therapistAppController'); router.post('/apply', c.apply); router.get('/application/status', c.status); router.put('/application', c.update); module.exports = router;

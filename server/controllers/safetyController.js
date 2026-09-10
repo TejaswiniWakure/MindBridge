@@ -1,0 +1,1 @@
+exports.resources = (req,res)=>res.json({}); exports.report = (req,res)=>res.json({}); exports.events = (req,res)=>res.json({});

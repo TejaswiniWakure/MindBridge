@@ -1,0 +1,1 @@
+const express = require('express'); const router = express.Router(); const c = require('../controllers/safetyController'); router.get('/resources', c.resources); router.post('/report', c.report); router.get('/events', c.events); module.exports = router;

@@ -1,0 +1,1 @@
+const express = require('express'); const router = express.Router(); const c = require('../controllers/notificationController'); router.get('/', c.getAll); router.put('/:id/read', c.markRead); router.put('/read-all', c.markAllRead); module.exports = router;

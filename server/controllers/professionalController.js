@@ -1,0 +1,1 @@
+exports.getAll = (req,res)=>res.json({}); exports.getOne = (req,res)=>res.json({});

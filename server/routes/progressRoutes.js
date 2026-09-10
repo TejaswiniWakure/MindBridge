@@ -1,0 +1,1 @@
+const express = require('express'); const router = express.Router(); const c = require('../controllers/progressController'); router.get('/summary', c.summary); router.get('/weekly', c.weekly); router.get('/assessments', c.assessments); module.exports = router;

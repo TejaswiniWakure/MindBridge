@@ -1,0 +1,1 @@
+const express = require('express'); const router = express.Router(); const c = require('../controllers/professionalController'); router.get('/', c.getAll); router.get('/:id', c.getOne); module.exports = router;

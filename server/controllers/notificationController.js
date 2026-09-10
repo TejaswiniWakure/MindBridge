@@ -1,0 +1,1 @@
+exports.getAll = (req,res)=>res.json({}); exports.markRead = (req,res)=>res.json({}); exports.markAllRead = (req,res)=>res.json({});
