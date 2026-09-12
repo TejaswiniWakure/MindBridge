@@ -86,7 +86,7 @@ app.use(errorHandler);
 socketHandler(io);
 
 // ── Start Server ──
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 server.listen(PORT, () => {
   console.log(`\n🌿 Mindwell API running on port ${PORT}`);
   console.log(`   Environment: ${process.env.NODE_ENV || 'development'}`);
